@@ -1,17 +1,33 @@
 {
-    "manifest_version": 3,
-    "name": "HTML Fetcher",
-    "version": "1.0",
-    "description": "Fetches the HTML of the current page.",
-    "permissions": ["activeTab"],
-    "action": {
-      "default_popup": "popup.html"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
-      }
-    ]
+  "name": "Blabber",
+  "version": "1.0",
+  "manifest_version": 3,
+  "description": "Simple Google Meet transcripts. Private and open source.",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_end",
+      "matches": [
+        "https://meet.google.com/*"
+      ],
+      "exclude_matches": [
+        "https://meet.google.com/"
+      ]
+    }
+  ],
+  "permissions": [
+    "storage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://meet.google.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
   }
-  
+}
