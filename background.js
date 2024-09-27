@@ -30,12 +30,12 @@ chrome.tabs.onRemoved.addListener(function (tabid) {
 })
 
 function sendToBackend() {
-    chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp"], function (result) {
+    chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp","meetingEndTimeStamp"], function (result) {
         console.log(result);
         if (result.userName && result.transcript && result.chatMessages) {
-            const fileName = result.meetingTitle && result.meetingStartTimeStamp ? 
-                             `TranscripTonic/Transcript-${result.meetingTitle} at ${result.meetingStartTimeStamp}.txt` : 
-                             `TranscripTonic/Transcript.txt`;
+            // const fileName = result.meetingTitle && result.meetingStartTimeStamp ? 
+            //                  `TranscripTonic/Transcript-${result.meetingTitle} at ${result.meetingStartTimeStamp}.txt` : 
+            //                  `TranscripTonic/Transcript.txt`;
 
             const lines = [];
 
@@ -69,6 +69,7 @@ function sendToBackend() {
                     userName: result.userName,
                     meetingTitle: result.meetingTitle || "Untitled Meeting",
                     meetingStartTimeStamp: result.meetingStartTimeStamp || new Date().toISOString(),
+                    meetingEndTimeStamp: result.meetingEndTimeStamp || undefined,
                     transcriptData: lines,
                 }),
             })

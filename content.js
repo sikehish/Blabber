@@ -31,6 +31,7 @@ overWriteChromeStorage(["chatMessages"], false)
 
 // Capture meeting start timestamp and sanitize special characters with "-" to avoid invalid filenames
 let meetingStartTimeStamp = new Date().toLocaleString("default", timeFormat).replace(/[/:]/g, '-').toUpperCase()
+let meetingEndTimeStamp=""
 let meetingTitle = document.title
 overWriteChromeStorage(["meetingStartTimeStamp", "meetingTitle"], false)
 // Capture invalid transcript and chat messages DOM element error for the first time
@@ -216,7 +217,7 @@ function meetingRoutines(uiType) {
         if ((personNameBuffer != "") && (transcriptTextBuffer != ""))
           pushBufferToTranscript()
         // Save to chrome storage and send message to download transcript from background script
-        overWriteChromeStorage(["transcript", "chatMessages"], true)
+        overWriteChromeStorage(["transcript", "chatMessages", "meetingEndTimeStamp"], true)
       })
     } catch (error) {
       console.error(error)
@@ -457,6 +458,9 @@ function overWriteChromeStorage(keys, endMeeting) {
     objectToSave.meetingStartTimeStamp = meetingStartTimeStamp
   if (keys.includes("chatMessages"))
     objectToSave.chatMessages = chatMessages
+  if (keys.includes("meetingEndTimeStamp"))
+    objectToSave.meetingEndTimeStamp  = new Date().toLocaleString("default", timeFormat).replace(/[/:]/g, '-').toUpperCase()
+
 
   chrome.storage.local.set(objectToSave, function () {
     if (endMeeting) {
