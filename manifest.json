@@ -28,7 +28,8 @@
     "downloads"
   ],
   "host_permissions": [
-    "https://meet.google.com/*"
+    "https://meet.google.com/*",
+    "http://localhost:3000/"
   ],
   "background": {
     "service_worker": "background.js"
