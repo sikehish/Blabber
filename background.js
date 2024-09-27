@@ -1,3 +1,4 @@
+
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.type == "new_meeting_started") {
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -35,7 +36,7 @@ function sendToBackend() {
 
             const lines = []
 
-=            result.transcript.forEach(entry => {
+            result.transcript.forEach(entry => {
                 lines.push({name: entry.personName ,timeStamp: entry.timeStamp, type:"transcript", content: entry.personTranscript})
             })
 
@@ -44,6 +45,8 @@ function sendToBackend() {
                     lines.push({name: entry.personName ,timeStamp: entry.timeStamp, type:"chat", content: entry.chatMessageText})
                 })
             }
+
+            console.log(lines)
         }
         else
             console.log("No transcript found")
