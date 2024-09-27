@@ -30,18 +30,15 @@ chrome.tabs.onRemoved.addListener(function (tabid) {
 })
 
 function sendToBackend() {
-    chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp","meetingEndTimeStamp"], function (result) {
+    chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp", "meetingEndTimeStamp", "attendees", "speakers"], function (result) {
         console.log(result);
+        
         if (result.userName && result.transcript && result.chatMessages) {
-            // const fileName = result.meetingTitle && result.meetingStartTimeStamp ? 
-            //                  `TranscripTonic/Transcript-${result.meetingTitle} at ${result.meetingStartTimeStamp}.txt` : 
-            //                  `TranscripTonic/Transcript.txt`;
-
             const lines = [];
 
             result.transcript.forEach(entry => {
                 lines.push({
-                    name: entry.personName,
+                    name: (entry.personName=="You" ?  result.userName :  entry.personName),
                     timeStamp: entry.timeStamp,
                     type: "transcript",
                     content: entry.personTranscript
@@ -51,13 +48,16 @@ function sendToBackend() {
             if (result.chatMessages.length > 0) {
                 result.chatMessages.forEach(entry => {
                     lines.push({
-                        name: entry.personName,
+                        name: (entry.personName=="You" ?  result.userName :  entry.personName),
                         timeStamp: entry.timeStamp,
                         type: "chat",
                         content: entry.chatMessageText
                     });
                 });
             }
+
+            console.log(result.speakers, result.attendees)
+            const speakersArray = Array.from(result.speakers || []).map(speaker => speaker.trim()).filter(speaker => speaker !== "");
 
             // Send the data to the backend using fetch API
             fetch('http://localhost:3000/transcripts', {
@@ -70,6 +70,8 @@ function sendToBackend() {
                     meetingTitle: result.meetingTitle || "Untitled Meeting",
                     meetingStartTimeStamp: result.meetingStartTimeStamp || new Date().toISOString(),
                     meetingEndTimeStamp: result.meetingEndTimeStamp || undefined,
+                    speakers: speakersArray,
+                    attendees: result.attendees,
                     transcriptData: lines,
                 }),
             })
@@ -85,3 +87,4 @@ function sendToBackend() {
         }
     });
 }
+

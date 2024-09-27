@@ -29,6 +29,8 @@ let beforePersonName = "", beforeTranscriptText = ""
 let chatMessages = []
 overWriteChromeStorage(["chatMessages"], false)
 
+const speakers = new Set();
+
 // Capture meeting start timestamp and sanitize special characters with "-" to avoid invalid filenames
 let meetingStartTimeStamp = new Date().toLocaleString("default", timeFormat).replace(/[/:]/g, '-').toUpperCase()
 let meetingEndTimeStamp=""
@@ -58,6 +60,8 @@ checkExtensionStatus().then(() => {
         // Poll the element until the textContent loads from network or until meeting starts
         const captureUserNameInterval = setInterval(() => {
           userName = document.querySelector(".awLEm").textContent
+          speakers.add(userName)
+          overWriteChromeStorage(["speakers"], false)
           if (userName || hasMeetingStarted) {
             clearInterval(captureUserNameInterval)
             // Prevent overwriting default "You" where element is found, but valid userName is not available
@@ -323,6 +327,11 @@ function transcriber(mutationsList, observer) {
         const person = people[people.length - 1]
         // CRITICAL DOM DEPENDENCY
         const currentPersonName = person.childNodes[0].textContent
+        if(currentPersonName!="You") {
+          speakers.add(currentPersonName)          
+          overWriteChromeStorage(["speakers"], false)
+        }
+
         // CRITICAL DOM DEPENDENCY
         const currentTranscriptText = person.childNodes[1].lastChild.textContent
 
@@ -458,13 +467,27 @@ function overWriteChromeStorage(keys, endMeeting) {
     objectToSave.meetingStartTimeStamp = meetingStartTimeStamp
   if (keys.includes("chatMessages"))
     objectToSave.chatMessages = chatMessages
+  if (keys.includes("speakers")){
+    objectToSave.speakers = Array.from(speakers);
+    console.log(objectToSave.speakers);
+
+  }
+    
   if (keys.includes("meetingEndTimeStamp"))
     objectToSave.meetingEndTimeStamp  = new Date().toLocaleString("default", timeFormat).replace(/[/:]/g, '-').toUpperCase()
 
+  if(endMeeting){
+    const attendeesArr=[]
+    const attendees = document.querySelectorAll('div.dwSJ2e')
+    for (const attendee of attendees)   attendeesArr.push(attendee.textContent); 
+    console.log(attendeesArr)
+    objectToSave.attendees=attendeesArr 
+  }
 
   chrome.storage.local.set(objectToSave, function () {
     if (endMeeting) {
-      // Download only if any transcript is present, irrespective of chat messages
+      
+      // console.log(attendice.map(el => el.textContent))
       if (transcript.length > 0) {
         chrome.runtime.sendMessage({ type: "end_meeting" }, function (response) {
           console.log(response);
