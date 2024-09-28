@@ -11,7 +11,6 @@ You can use it to generate meeting recaps, reports, and transcripts for your mee
 - Generate meeting recaps, reports, and transcripts using AI.
 - Generate meeting recaps and reports for set intervals and custom intervals.
 - Also recaps chat text messages.
-- 
 
 ## What is the core concept or problem this project aims to solve?
 

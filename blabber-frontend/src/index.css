@@ -21,6 +21,12 @@
   font-size: 10rem;
 }
 
+@media screen and (max-width: 768px) {
+  .superlarge {
+    font-size: 5rem;
+  }
+}
+
 .logo-bg {
   background: -webkit-linear-gradient( #ad00a2, #0c2eed);
   -webkit-background-clip: text;

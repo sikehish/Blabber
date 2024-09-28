@@ -1,6 +1,7 @@
 chrome.runtime.onInstalled.addListener(() => {
     chrome.identity.getAuthToken({ interactive: true }, function (token) {
       if (chrome.runtime.lastError || !token) {
+        console.log("Token", token);
         console.error(chrome.runtime.lastError);
         return;
       }
