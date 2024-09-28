@@ -13,9 +13,12 @@ chrome.runtime.onInstalled.addListener(() => {
       })
       .then(response => response.json())
       .then(data => {
-        console.log("User Email: ", data.email);
-        console.log("User Name: ", data.name);
-        
+        chrome.storage.local.set({ 
+            oauthEmail: data.email,
+            oauthName: data.name 
+        }, function() {
+            console.log('User information stored in Chrome storage.');
+        });            
       })
       .catch(error => {
         console.error('Error fetching user info:', error);
