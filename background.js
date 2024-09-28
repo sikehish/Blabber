@@ -29,20 +29,41 @@ chrome.tabs.onRemoved.addListener(function (tabid) {
     })
 })
 
+function parseTimestamp(timestamp) {
+        const [datePart, timePart] = timestamp.split(", ");
+    const [day, month, year] = datePart.split("/");
+    const reformattedDate = `${month}/${day}/${year}`;
+    const formattedTimestamp = `${reformattedDate}, ${timePart}`;
+    const parsedDate = new Date(formattedTimestamp);
+    return parsedDate;
+}
+
+
 function sendToBackend() {
     chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp", "meetingEndTimeStamp", "attendees", "speakers"], function (result) {
         console.log(result);
+        const speakerDuration={};
         
         if (result.userName && result.transcript && result.chatMessages) {
             const lines = [];
-
+            const averageWPM = 170;
+            
             result.transcript.forEach(entry => {
-                lines.push({
-                    name: (entry.personName=="You" ?  result.userName :  entry.personName),
+                const wordCount = entry.personTranscript.split(' ').length;
+                const durationInSeconds = Math.round((wordCount / averageWPM) * 60); 
+                const transcriptEntry = {
+                    name: (entry.personName == "You" ? result.userName : entry.personName),
                     timeStamp: entry.timeStamp,
                     type: "transcript",
+                    duration: durationInSeconds,
                     content: entry.personTranscript
-                });
+                };
+                
+                lines.push(transcriptEntry);
+                const speakerName = transcriptEntry.name;
+                if (speakerDuration[speakerName])    speakerDuration[speakerName] += transcriptEntry.duration;
+                else speakerDuration[speakerName] = transcriptEntry.duration;
+                
             });
 
             if (result.chatMessages.length > 0) {
@@ -51,6 +72,7 @@ function sendToBackend() {
                         name: (entry.personName=="You" ?  result.userName :  entry.personName),
                         timeStamp: entry.timeStamp,
                         type: "chat",
+                        duration: 0, // chat msgs don't count as spoken time
                         content: entry.chatMessageText
                     });
                 });
@@ -73,6 +95,7 @@ function sendToBackend() {
                     speakers: speakersArray,
                     attendees: result.attendees,
                     transcriptData: lines,
+                    speakerDuration
                 }),
             })
             .then(response => response.json())
