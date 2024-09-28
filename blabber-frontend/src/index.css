@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'lilitaone';
+    font-style: normal;
+    font-weight: 400;
+    src: url(./fonts/Lilita_One/LilitaOne-Regular.ttf) format('ttf');
+  }
+}
+
+/* @layer base {
+  html {
+    font-family: 'lilitaone';
+  }
+} */
+
+.superlarge {
+  font-size: 10rem;
+}
+
+.logo-bg {
+  background: -webkit-linear-gradient( #ad00a2, #0c2eed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
