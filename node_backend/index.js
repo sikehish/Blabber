@@ -17,9 +17,47 @@ app.use(express.json());
 app.post('/transcripts', (req, res) => {
     const transcriptData = req.body;
 
+    
+    function parseTimestamp(timestamp) {
+        return new Date(timestamp.replace(",", ""));
+    }
+    
+    // Calculate total speaking time for each speaker
+    function calculateSpeakingDuration(transcriptData) {
+        const speakingDurations = {};
+        
+        // Initialize last timestamp and speaker
+        let lastTimestamp = null;
+        let lastSpeaker = null;
+      
+        transcriptData.forEach((entry, index) => {
+            const currentSpeaker = entry.name;
+            const currentTimestamp = parseTimestamp(entry.timeStamp);
+            
+            if (lastSpeaker && lastTimestamp && lastSpeaker === currentSpeaker) {
+                const duration = (currentTimestamp - lastTimestamp) / 1000; // Duration in seconds
+                
+                // Add the duration to the speaker's total
+                if (!speakingDurations[currentSpeaker]) {
+                    speakingDurations[currentSpeaker] = 0;
+                }
+                speakingDurations[currentSpeaker] += duration;
+            }
+            
+            // Update the last speaker and timestamp for the next iteration
+            lastSpeaker = currentSpeaker;
+            lastTimestamp = currentTimestamp;
+        });
+        
+        return speakingDurations;
+    }
+    
+    // Calculate and log the total speaking durations
+    const speakingDurations = calculateSpeakingDuration(transcriptData.transcriptData);
+    console.log("Speaking durations (in seconds):", speakingDurations);
+    
     // Log the received data
     console.log("Received transcript data:", transcriptData);
-
     // Respond back with the same data
     res.json({
         message: "Transcript data received successfully",
