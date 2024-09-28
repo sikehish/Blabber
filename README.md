@@ -37,5 +37,3 @@ You can use it to generate meeting recaps, reports, and transcripts for your mee
 ### 4. Sayed Afnan Khazi – Web Developer & Social Impact Innovator
 
 - Afnan is a web developer and two-time national hackathon winner. His passion for technology and social impact drives his work, where he strives to build platforms that create positive change while ensuring a high-quality user experience.
-
-
