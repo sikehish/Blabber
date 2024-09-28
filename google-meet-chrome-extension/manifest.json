@@ -12,21 +12,24 @@
   "content_scripts": [
     {
       "js": [
-        "content.js"
+        "content.js",
+        "screenshot.js"
       ],
       "run_at": "document_end",
       "matches": [
         "https://meet.google.com/*"
       ],
       "exclude_matches": [
-        "https://meet.google.com/"
+        "https://meet.google.com/",  "https://meet.google.com/landing"
       ]
     }
   ],
   "permissions": [
     "storage",
     "downloads",
-    "identity"  
+    "identity", 
+    "tabs",
+    "activeTab"
   ],
   "host_permissions": [
     "https://meet.google.com/*",

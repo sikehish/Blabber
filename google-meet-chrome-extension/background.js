@@ -49,6 +49,26 @@ chrome.runtime.onInstalled.addListener(() => {
 
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+   if (message.action === 'captureScreenshot') {
+        chrome.tabs.captureVisibleTab(null, {format: "png"}, function(dataUrl) {
+            if (chrome.runtime.lastError) {
+                console.error("Error capturing screenshot:", chrome.runtime.lastError);
+                sendResponse({ error: chrome.runtime.lastError.message });
+                return;
+            }
+
+            // Assuming you want to upload the screenshot
+            // Call your upload function here if needed
+            // For example, you might call uploadScreenshot(dataUrl);
+
+            // Send the captured screenshot URL back to the content script
+            sendResponse({ screenshotUrl: dataUrl });
+        });
+
+        // Return true to indicate that you want to send a response asynchronously
+        return true;
+    }
+
     if (message.type == "new_meeting_started") {
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             const tabId = tabs[0].id
