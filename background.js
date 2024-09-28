@@ -116,7 +116,7 @@ function sendToBackend() {
             console.log(result.speakers, result.attendees)
             const speakersArray = Array.from(result.speakers || []).map(speaker => speaker.trim()).filter(speaker => speaker !== "");
 
-            fetch('http://localhost:3000/transcripts', {
+            fetch('http://localhost:3000/api/meet', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ function sendToBackend() {
                 body: JSON.stringify({
                     blabberEmail: result.oauthEmail,
                     blabberName: result.oauthName,
-                    userName: result.userName,
+                    convenor: result.userName,
                     meetingTitle: result.meetingTitle || "Untitled Meeting",
                     meetingStartTimeStamp: parseCustomTimestamp(result.meetingStartTimeStamp, true) || new Date().toISOString(),
                     meetingEndTimeStamp: parseCustomTimestamp(result.meetingEndTimeStamp,true) || undefined,
