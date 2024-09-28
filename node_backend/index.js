@@ -181,7 +181,31 @@ app.get("/api/oauth/logout", (req, res) => {
     res.redirect(process.env.CLIENT_URL);
 });
 
+app.post('/api/register-from-extension', async (req, res) => {
+  const { email, name } = req.body;
 
+  if (!email || !name) {
+      return res.status(400).json({ message: 'Email and name are required.' });
+  }
+
+  try {
+      // Check if the user already exists
+      const existingUser = await User.findOne({ email });
+      
+      if (existingUser) {
+          return res.status(409).json({ message: 'User already exists.' });
+      }
+
+      // Create a new user
+      const newUser = new User({ email, name });
+      await newUser.save();
+
+      return res.status(201).json({ message: 'User created successfully.', user: newUser });
+  } catch (error) {
+      console.error('Error registering user:', error);
+      return res.status(500).json({ message: 'Internal server error.' });
+  }
+});
 
 // Start the server
 app.listen(PORT, () => {

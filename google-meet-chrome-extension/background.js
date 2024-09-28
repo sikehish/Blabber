@@ -1,33 +1,51 @@
 chrome.runtime.onInstalled.addListener(() => {
     chrome.identity.getAuthToken({ interactive: true }, function (token) {
-      if (chrome.runtime.lastError || !token) {
-        console.log("Token", token);
-        console.error(chrome.runtime.lastError);
-        return;
-      }
-  
-      // Fetch user info
-      fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
-        headers: {
-          Authorization: 'Bearer ' + token
+        if (chrome.runtime.lastError || !token) {
+            console.log("Token", token);
+            console.error(chrome.runtime.lastError);
+            return;
         }
-      })
-      .then(response => response.json())
-      .then(data => {
-        chrome.storage.local.set({ 
-            oauthEmail: data.email,
-            oauthName: data.name 
-        }, function() {
-            console.log(data.email, data.name)
-            console.log('User information stored in Chrome storage.');
-        });            
-      })
-      .catch(error => {
-        console.error('Error fetching user info:', error);
-      });
+
+        // Fetch user info
+        fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Store user information in Chrome storage
+            chrome.storage.local.set({ 
+                oauthEmail: data.email,
+                oauthName: data.name 
+            }, function() {
+                console.log(data.email, data.name);
+                console.log('User information stored in Chrome storage.');
+
+                // Make fetch request to your API endpoint
+                fetch('http://localhost:3000/api/register-from-extension', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: data.email,
+                        name: data.name
+                    })
+                })
+                .then(result => {
+                    console.log('User registered:', result);
+                })
+                .catch(error => {
+                    console.error('Error registering user:', error);
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching user info:', error);
+        });
     });
-  });
-  
+});
 
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
