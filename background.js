@@ -28,16 +28,29 @@ chrome.tabs.onRemoved.addListener(function (tabid) {
         }
     })
 })
+function parseCustomTimestamp(timestamp,isFringe) {
+    const [datePart, timePart] = timestamp.split(', ');
 
-function parseTimestamp(timestamp) {
-        const [datePart, timePart] = timestamp.split(", ");
-    const [day, month, year] = datePart.split("/");
-    const reformattedDate = `${month}/${day}/${year}`;
-    const formattedTimestamp = `${reformattedDate}, ${timePart}`;
-    const parsedDate = new Date(formattedTimestamp);
-    return parsedDate;
+    const [day, month, year] = (isFringe ? datePart.split('-').map(Number) :  datePart.split('/').map(Number)) 
+    const [time, period] = timePart.split(' ');
+    let [hours, minutes, seconds] = (isFringe ? time.split('-').map(Number) : time.split(':').map(Number));
+
+    if (seconds === undefined) {
+        seconds = 0;
+    }
+
+    if (period === "PM" && hours < 12) {
+        hours += 12; // Convert PM to 24-hour format
+    } else if (period === "AM" && hours === 12) {
+        hours = 0; // Midnight case (12 AM)
+    }
+
+    const dateObject = new Date(year, month - 1, day, hours, minutes, seconds);
+
+    // Return the date in ISO format (e.g., 2024-09-28T16:03:16)
+    console.log(dateObject.toISOString().slice(0, 19))
+    return dateObject.toISOString().slice(0, 19);
 }
-
 
 function sendToBackend() {
     chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp", "meetingEndTimeStamp", "attendees", "speakers"], function (result) {
@@ -53,7 +66,7 @@ function sendToBackend() {
                 const durationInSeconds = Math.round((wordCount / averageWPM) * 60); 
                 const transcriptEntry = {
                     name: (entry.personName == "You" ? result.userName : entry.personName),
-                    timeStamp: entry.timeStamp,
+                    timeStamp: parseCustomTimestamp(entry.timeStamp, false),
                     type: "transcript",
                     duration: durationInSeconds,
                     content: entry.personTranscript
@@ -70,7 +83,7 @@ function sendToBackend() {
                 result.chatMessages.forEach(entry => {
                     lines.push({
                         name: (entry.personName=="You" ?  result.userName :  entry.personName),
-                        timeStamp: entry.timeStamp,
+                        timeStamp: parseCustomTimestamp(entry.timeStamp, false),
                         type: "chat",
                         duration: 0, // chat msgs don't count as spoken time
                         content: entry.chatMessageText
@@ -81,7 +94,6 @@ function sendToBackend() {
             console.log(result.speakers, result.attendees)
             const speakersArray = Array.from(result.speakers || []).map(speaker => speaker.trim()).filter(speaker => speaker !== "");
 
-            // Send the data to the backend using fetch API
             fetch('http://localhost:3000/transcripts', {
                 method: 'POST',
                 headers: {
@@ -90,8 +102,8 @@ function sendToBackend() {
                 body: JSON.stringify({
                     userName: result.userName,
                     meetingTitle: result.meetingTitle || "Untitled Meeting",
-                    meetingStartTimeStamp: result.meetingStartTimeStamp || new Date().toISOString(),
-                    meetingEndTimeStamp: result.meetingEndTimeStamp || undefined,
+                    meetingStartTimeStamp: parseCustomTimestamp(result.meetingStartTimeStamp, true) || new Date().toISOString(),
+                    meetingEndTimeStamp: parseCustomTimestamp(result.meetingEndTimeStamp,true) || undefined,
                     speakers: speakersArray,
                     attendees: result.attendees,
                     transcriptData: lines,
