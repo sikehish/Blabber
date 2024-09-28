@@ -17,6 +17,7 @@ chrome.runtime.onInstalled.addListener(() => {
             oauthEmail: data.email,
             oauthName: data.name 
         }, function() {
+            console.log(data.email, data.name)
             console.log('User information stored in Chrome storage.');
         });            
       })
@@ -74,7 +75,7 @@ function parseCustomTimestamp(timestamp,isFringe) {
 }
 
 function sendToBackend() {
-    chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp", "meetingEndTimeStamp", "attendees", "speakers"], function (result) {
+    chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp", "meetingEndTimeStamp", "attendees", "speakers","oauthEmail", "oauthName"], function (result) {
         console.log(result);
         const speakerDuration={};
         
@@ -121,6 +122,8 @@ function sendToBackend() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    blabberEmail: result.oauthEmail,
+                    blabberName: result.oauthName,
                     userName: result.userName,
                     meetingTitle: result.meetingTitle || "Untitled Meeting",
                     meetingStartTimeStamp: parseCustomTimestamp(result.meetingStartTimeStamp, true) || new Date().toISOString(),
