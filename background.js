@@ -39,17 +39,9 @@ function parseCustomTimestamp(timestamp,isFringe) {
         seconds = 0;
     }
 
-    if (period === "PM" && hours < 12) {
-        hours += 12; // Convert PM to 24-hour format
-    } else if (period === "AM" && hours === 12) {
-        hours = 0; // Midnight case (12 AM)
-    }
-
     const dateObject = new Date(year, month - 1, day, hours, minutes, seconds);
 
-    // Return the date in ISO format (e.g., 2024-09-28T16:03:16)
-    console.log(dateObject.toISOString().slice(0, 19))
-    return dateObject.toISOString().slice(0, 19);
+    return dateObject
 }
 
 function sendToBackend() {
