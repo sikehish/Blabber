@@ -25,7 +25,8 @@
   ],
   "permissions": [
     "storage",
-    "downloads"
+    "downloads",
+    "identity"  
   ],
   "host_permissions": [
     "https://meet.google.com/*",
@@ -33,5 +34,12 @@
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "oauth2": {
+    "client_id": "114382536282-fe6h8nbnahi5gq1kmeah6fglnobrl5t1.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"  
+    ]
   }
 }

@@ -1,3 +1,29 @@
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.identity.getAuthToken({ interactive: true }, function (token) {
+      if (chrome.runtime.lastError || !token) {
+        console.error(chrome.runtime.lastError);
+        return;
+      }
+  
+      // Fetch user info
+      fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("User Email: ", data.email);
+        console.log("User Name: ", data.name);
+        
+      })
+      .catch(error => {
+        console.error('Error fetching user info:', error);
+      });
+    });
+  });
+  
+
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.type == "new_meeting_started") {
