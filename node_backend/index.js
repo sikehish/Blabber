@@ -69,7 +69,7 @@ mongoose.connect(MONGO_URI, {
   
       // Prepare screenshots data if it exists
       // console.log(meetData.screenshots)
-      console.log("SS1: ", meetData.screenshots)
+      // console.log("SS1: ", meetData.screenshots)
       // Prepare screenshots data if it exists and has valid filenames
 const screenshots = meetData.screenshots
 ?.filter(screenshot => screenshot.filename) // Filter out screenshots without a filename
@@ -80,7 +80,7 @@ const screenshots = meetData.screenshots
 })) || [];
 
 
-      console.log("SS2: ",screenshots)
+      // console.log("SS2: ",screenshots)
       // Create a new meet object
       const newMeet = new Meet({
         ...meetData,
@@ -103,10 +103,10 @@ app.get('/api/users/check', checkAuth, async (req, res) => {
         throw new Error('User is not authenticated');
       }
       
-      console.log("USER ", req.user);
+      // console.log("USER ", req.user);
       const email = req.user.email; // Assuming req.user contains an object with the email
       const user = await User.findOne({ email });
-      console.log("User: ", user);
+      // console.log("User: ", user);
   
       if (user) {
         res.status(200).json({ user: { email: user.email, name: user.name } }); // Return the user object with email
@@ -135,12 +135,12 @@ app.get('/api/meet',checkAuth, async (req, res) => {
     if(!user){
         throw new Error("This email isn't registered!")
     }
+    // console.log(user, email)
     const meets = await Meet.find({ blabberEmail : email}).sort({ meetingStartTimeStamp: -1 });
-
     if (meets.length === 0) {
       return res.status(404).json({ message: 'No meets found for this email.' });
     }
-
+    
     res.json(meets);
   } catch (error) {
     console.error('Error fetching meets:', error);
@@ -177,7 +177,7 @@ app.get('/api/oauth/google/callback', passport.authenticate('google', { session:
     console.log("HAHAHAHAH")
   if (req.user) {
     const user = req.user;
-    console.log("USERRRR: ", user)
+    // console.log("USERRRR: ", user)
     const token = jwt.sign({ email: user.email, name: user.name }, process.env.JWT_KEY, { expiresIn: '5d' });
     // console.log("TOKEEEEN ", token)
     res.cookie('token', token, {
