@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
+import useWithGmeet from "../assets/works-with-gmeet.jpg";
 
 function Home() {
   const {state} =useAuthContext()
@@ -18,6 +19,8 @@ function Home() {
             <p className="mb-8">
               Use Blabber to generate meeting recaps, reports, and transcripts for your meetings, interviews, and other conversations.
             </p>
+            <img src={useWithGmeet} alt="Use with Gmeet" className="w-1/4 mx-auto" />
+            <p className="mb-8">Other platforms coming soon...</p>
             <button onClick={() => state?.user ? navigate("/") : navigate("/login")} className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-blue-700">
               Get Started
             </button>
