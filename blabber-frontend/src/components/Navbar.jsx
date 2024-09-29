@@ -12,10 +12,10 @@ function Navbar() {
   }
 
   return (
-    <nav className="bg-gray-800 p-4 flex justify-between items-center">
+    <nav className="bg-purple-900 p-4 flex justify-between items-center">
       {/* Left side - Blabber logo */}
-      <div className="text-white text-2xl font-bold">
-        <Link to="/" className="logo-bg">
+      <div className="text-white text-2xl font-bold hover:rounded-lg hover:bg-white p-1">
+        <Link to="/" className="nav-name">
           Blabber
         </Link>
       </div>
@@ -36,10 +36,10 @@ function Navbar() {
           </>
         ) : (
           <>
-            <Link to="/" className="text-white hover:text-purple-400">
+            <Link to="/" className="text-white hover:text-blue-900 hover:rounded-lg hover:bg-white p-1">
               Home
             </Link>
-            <Link to="/login" className="text-white hover:text-purple-400">
+            <Link to="/login" className="text-white hover:text-blue-900 hover:rounded-lg hover:bg-white p-1">
               Login
             </Link>
           </>

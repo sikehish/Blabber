@@ -5,7 +5,7 @@ function Home() {
   const {state} =useAuthContext()
   const navigate=useNavigate()
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Main content */}
       <div className="flex-grow flex items-center justify-center">
         <main className="flex flex-col items-center mt-8 px-4 text-center">

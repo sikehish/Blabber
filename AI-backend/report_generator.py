@@ -41,7 +41,7 @@ def create_normal_report_pdf(meeting_data):
     analysis = analyze_speech(meeting_data['transcriptData'])
     overall_summary, key_takeaways = generate_summary_and_takeaways(analysis)
 
-    file_name = f"{meeting_data['meetingTitle']}_normal_report.pdf"
+    file_name = f"./reports/{meeting_data['meetingTitle']}_normal_report.pdf"
     pdf = SimpleDocTemplate(file_name, pagesize=A4)
     elements = []
     
@@ -68,13 +68,14 @@ def create_normal_report_pdf(meeting_data):
 
     pdf.build(elements)
     print(f"{file_name} generated successfully.")
+    return file_name
 
 # Function to create the DOCX report for normal report
 def create_normal_report_docx(meeting_data):
     analysis = analyze_speech(meeting_data['transcriptData'])
     overall_summary, key_takeaways = generate_summary_and_takeaways(analysis)
 
-    file_name = f"{meeting_data['meetingTitle']}_normal_report.docx"
+    file_name = f"./reports/{meeting_data['meetingTitle']}_normal_report.docx"
     doc = Document()
 
     doc.add_heading(meeting_data['meetingTitle'], 0)
@@ -91,6 +92,7 @@ def create_normal_report_docx(meeting_data):
 
     doc.save(file_name)
     print(f"{file_name} generated successfully.")
+    return file_name
 
 # Function to rank speakers by duration
 def rank_speakers(meeting_data):
@@ -109,7 +111,7 @@ def rank_speakers(meeting_data):
 def create_speaker_ranking_report_pdf(meeting_data):
     ranking = rank_speakers(meeting_data)
 
-    file_name = f"{meeting_data['meetingTitle']}_speaker_ranking_report.pdf"
+    file_name = f"./reports/{meeting_data['meetingTitle']}_speaker_ranking_report.pdf"
     pdf = SimpleDocTemplate(file_name, pagesize=A4)
     elements = []
     
@@ -123,12 +125,13 @@ def create_speaker_ranking_report_pdf(meeting_data):
     
     pdf.build(elements)
     print(f"{file_name} generated successfully.")
+    return file_name
 
 # Function to create the DOCX report for speaker ranking
 def create_speaker_ranking_report_docx(meeting_data):
     ranking = rank_speakers(meeting_data)
 
-    file_name = f"{meeting_data['meetingTitle']}_speaker_ranking_report.docx"
+    file_name = f"./reports/{meeting_data['meetingTitle']}_speaker_ranking_report.docx"
     doc = Document()
     doc.add_heading("Speaker Ranking Report", 0)
 
@@ -137,12 +140,13 @@ def create_speaker_ranking_report_docx(meeting_data):
 
     doc.save(file_name)
     print(f"{file_name} generated successfully.")
+    return file_name
 
 # Function to create the PDF report for sentiment analysis
 def create_sentiment_report_pdf(meeting_data):
     analysis = analyze_speech(meeting_data['transcriptData'])
 
-    file_name = f"{meeting_data['meetingTitle']}_sentiment_report.pdf"
+    file_name = f"./reports/{meeting_data['meetingTitle']}_sentiment_report.pdf"
     pdf = SimpleDocTemplate(file_name, pagesize=A4)
     elements = []
     
@@ -160,12 +164,13 @@ def create_sentiment_report_pdf(meeting_data):
 
     pdf.build(elements)
     print(f"{file_name} generated successfully.")
+    return file_name
 
 # Function to create the DOCX report for sentiment analysis
 def create_sentiment_report_docx(meeting_data):
     analysis = analyze_speech(meeting_data['transcriptData'])
 
-    file_name = f"{meeting_data['meetingTitle']}_sentiment_report.docx"
+    file_name = f"./reports/{meeting_data['meetingTitle']}_sentiment_report.docx"
     doc = Document()
     doc.add_heading("Sentiment Analysis Report", 0)
 
@@ -178,37 +183,74 @@ def create_sentiment_report_docx(meeting_data):
 
     doc.save(file_name)
     print(f"{file_name} generated successfully.")
+    return file_name
+
+class NormalReport:
+    def __init__(self):
+        pass
+    def __str__(self):
+        return "Normal Report"
+
+class SpeakerRankingReport:
+    def __init__(self):
+        pass
+    def __str__(self):
+        return "Speaker Ranking Report"
+
+class SentimentReport:
+    def __init__(self):
+        pass
+    def __str__(self):
+        return "Sentiment Report"
+    
+class PDF_Type:
+    def __init__(self):
+        pass
+    def __str__(self):
+        return "PDF"
+
+class DOCX_Type:
+    def __init__(self):
+        pass
+    def __str__(self):
+        return "DOCX"
+    
+def create_reports_directory():
+    '''Creates a directory named './reports' if it does not exist.'''
+    import os
+    if not os.path.exists('./reports'):
+        os.makedirs('./reports')
+        print("Reports directory created successfully.")
 
 # Main function to generate reports based on user input
-def generate_reports(meeting_data):
-    print("Select the report type to generate:")
-    print("1. Normal Report")
-    print("2. Speaker Ranking Report")
-    print("3. Sentiment Report")
-    report_choice = input("Enter the number corresponding to your choice: ")
+def generate_reports(meeting_data,report_choice=NormalReport,format_choice=PDF_Type):
+    '''Generates and saves a report based on user input.
+        meeting_data: dict, contains meeting details and transcript data
+        report_choice: the type of report to generate. Use the classes from this file: NormalReport, SpeakerRankingReport, SentimentReport
+        format_choice: the format of the report. Use the classes from this file: PDF, DOCX'''
+    
+    # Create reports directory if it does not exist
+    create_reports_directory()
 
-    print("Select the format:")
-    print("1. PDF")
-    print("2. DOCX")
-    format_choice = input("Enter the number corresponding to your choice: ")
 
-    if report_choice == '1':
-        if format_choice == '1':
-            create_normal_report_pdf(meeting_data)
-        elif format_choice == '2':
-            create_normal_report_docx(meeting_data)
-    elif report_choice == '2':
-        if format_choice == '1':
-            create_speaker_ranking_report_pdf(meeting_data)
-        elif format_choice == '2':
-            create_speaker_ranking_report_docx(meeting_data)
-    elif report_choice == '3':
-        if format_choice == '1':
-            create_sentiment_report_pdf(meeting_data)
-        elif format_choice == '2':
-            create_sentiment_report_docx(meeting_data)
+    if report_choice ==  NormalReport:
+        if format_choice ==  PDF_Type:
+            return create_normal_report_pdf(meeting_data)
+        elif format_choice ==  DOCX_Type:
+            return create_normal_report_docx(meeting_data)
+    elif report_choice ==  SpeakerRankingReport:
+        print("generating speaker ranking report")
+        if format_choice ==  PDF_Type:
+            return create_speaker_ranking_report_pdf(meeting_data)
+        elif format_choice ==  DOCX_Type:
+            return create_speaker_ranking_report_docx(meeting_data)
+    elif report_choice ==  SentimentReport:
+        if format_choice ==  PDF_Type:
+            return create_sentiment_report_pdf(meeting_data)
+        elif format_choice ==  DOCX_Type:
+            return create_sentiment_report_docx(meeting_data)
     else:
-        print("Invalid input. Please try again.")
+        raise ValueError("Invalid report or format choice.")
 
 # Example usage
 if __name__ == "__main__":
@@ -226,4 +268,4 @@ if __name__ == "__main__":
         'speakerDuration': {'Alice': 15, 'Bob': 10}
     }
 
-    generate_reports(meeting_data)
+    print("Returns",generate_reports(meeting_data, report_choice=SpeakerRankingReport, format_choice=DOCX_Type))

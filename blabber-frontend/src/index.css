@@ -2,23 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  @font-face {
+
+@font-face {
     font-family: 'lilitaone';
     font-style: normal;
-    font-weight: 400;
-    src: url(./fonts/Lilita_One/LilitaOne-Regular.ttf) format('ttf');
+    font-weight: 200;
+    src: url(./fonts/Lilita_One/LilitaOne-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'titilliumweb';
+  font-style: normal;
+  font-weight: 600;
+  src: url(./fonts/TitilliumWeb/TitilliumWeb-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'notoserif';
+  font-style: normal;
+  font-weight: 400;
+  src: url(./fonts/Noto_Serif_Old_Uyghur/NotoSerifOldUyghur-Regular.ttf);
+}
+
+
+@layer base {
+  html {
+    font-family: 'notoserif', serif;
   }
 }
 
-/* @layer base {
-  html {
-    font-family: 'lilitaone';
-  }
-} */
-
 .superlarge {
   font-size: 10rem;
+  letter-spacing: -10px;
 }
 
 @media screen and (max-width: 768px) {
@@ -28,6 +43,12 @@
 }
 
 .logo-bg {
+  background: -webkit-linear-gradient( #ad00a2, #0c2eed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-name:hover {
   background: -webkit-linear-gradient( #ad00a2, #0c2eed);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
