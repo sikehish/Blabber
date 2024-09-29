@@ -100,6 +100,7 @@ async function checkExtensionStatus() {
     .then((response) => response.json())
     .then((result) => {
       // Write status to chrome local storage
+      result.message = "<strong>Blabber is running</strong> <br /> Do not turn off captions";
       chrome.storage.local.set({ extensionStatusJSON: result }, function () {
         console.log("Extension status fetched and saved")
       });
@@ -267,7 +268,7 @@ function showNotification(extensionStatusJSON) {
 
   logo.setAttribute(
     "src",
-    "https://ejnana.github.io/transcripto-status/icon.png"
+    "https://i.imgur.com/wzbSgvY.png"
   );
   logo.setAttribute("height", "32px");
   logo.setAttribute("width", "32px");
