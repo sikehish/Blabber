@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "Screenshot Extension",
+    "version": "1.0",
+    "permissions": [
+      "activeTab",
+      "storage",
+      "downloads",
+      "tabs",
+      "scripting"
+    ],
+    "host_permissions": [
+      "https://meet.google.com/*"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "js": ["content.js"],
+        "matches": ["https://meet.google.com/*"]
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }
+  
