@@ -5,7 +5,7 @@ function Home() {
   const {state} =useAuthContext()
   const navigate=useNavigate()
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen">
       {/* Main content */}
       <div className="flex-grow flex items-center justify-center">
         <main className="flex flex-col items-center mt-8 px-4 text-center">
@@ -18,17 +18,12 @@ function Home() {
             <p className="mb-8">
               Use Blabber to generate meeting recaps, reports, and transcripts for your meetings, interviews, and other conversations.
             </p>
-            <button   onClick={() => state?.user ? navigate("/") : navigate("/login")} className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+            <button onClick={() => state?.user ? navigate("/") : navigate("/login")} className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-blue-700">
               Get Started
             </button>
           </div>
         </main>
       </div>
-
-      {/* Footer */}
-      <footer className="w-full py-4 bg-gray-100 text-center">
-        &copy; {new Date().getFullYear()} Blabber. All rights reserved.
-      </footer>
     </div>
   );
 }

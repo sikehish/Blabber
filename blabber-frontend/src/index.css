@@ -38,6 +38,12 @@
 
 @media screen and (max-width: 768px) {
   .superlarge {
+    font-size: 7rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .superlarge {
     font-size: 5rem;
   }
 }
