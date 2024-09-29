@@ -147,7 +147,7 @@ const reportTypes = [
     };
 
     return (
-        <div className="bg-white shadow-lg rounded-xl p-6 m-4 hover:shadow-2xl transition-shadow duration-300">
+        <div className="border border-purple-300 bg-white shadow-lg rounded-xl p-6 m-4 hover:shadow-2xl shadow-purple-300 hover:shadow-purple-300 transition-shadow duration-300">
             <div className="flex flex-row w-full">
                 <div className="flex flex-col items-start w-full">
                     <div className='flex flex-col md:flex-row justify-between'>
