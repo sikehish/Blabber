@@ -13,8 +13,8 @@ const jwt=require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
-const { pipeline } = require('stream');
-const { Readable } = require('stream');
+const { pipeline,Readable } = require('stream');
+const nodemailer = require('nodemailer');
 
 
 passport.use(new GoogleStrategy({

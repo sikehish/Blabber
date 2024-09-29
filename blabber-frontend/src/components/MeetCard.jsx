@@ -68,6 +68,22 @@ const reportTypes = [
     const [interval, setInterval]=useState(undefined)
     const [error, setError] = useState(null);
     const [emails, setEmails] = useState(['']); // Start with one empty email field
+
+    const addEmail = () => {
+        setEmails([...emails, '']); // Add a new empty email input
+    };
+    
+    const removeEmail = (index) => {
+        const newEmails = emails.filter((_, i) => i !== index); // Remove the selected email
+        setEmails(newEmails);
+    };
+    
+    const handleEmailChange = (e, index) => {
+        const newEmails = [...emails];
+        newEmails[index] = e.target.value; // Update the email at the given index
+        setEmails(newEmails);
+    };
+    
   
     const openModal = () => {
       setIsModalOpen(true);
@@ -83,13 +99,14 @@ const reportTypes = [
       e.preventDefault();
       setLoading(true);
       setError(null);
-  
+        console.log(emails)
       const payload = {
         meeting_title: meetingTitle,
         report_type: reportType,
         report_format: reportFormat,
         meeting_id: meet._id,
-        report_interval: interval
+        report_interval: interval,
+        emails
       };
 
       if(interval) payload[interval]=interval
