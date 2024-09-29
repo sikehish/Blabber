@@ -18,7 +18,7 @@ const handleGoogleSignIn = (e) => {
         
         {/* Features */}
         <div className="mb-6">
-          <ul className="text-left text-gray-600 space-y-2">
+          <ul className="text-left text-gray-600 space-y-2 text-sm lg:text-md">
             <li>🎤 <span className="font-medium">Real-time Transcripts</span> for all your meetings.</li>
             <li>🧠 <span className="font-medium">AI-powered Summaries</span> for easy meeting insights.</li>
             <li>🔍 <span className="font-medium">Speaker Identification</span> to track who said what.</li>
@@ -29,9 +29,9 @@ const handleGoogleSignIn = (e) => {
         {/* Sign in with Google Button */}
         <button
           onClick={handleGoogleSignIn}
-          className="flex items-center justify-center w-full bg-purple-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-red-600 transition duration-200"
+          className="flex items-center justify-center w-full bg-purple-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200"
         >
-          <img src="https://yt3.googleusercontent.com/viNp17XpEF-AwWwOZSj_TvgobO1CGmUUgcTtQoAG40YaYctYMoUqaRup0rTxxxfQvWw3MvhXesw=s900-c-k-c0x00ffffff-no-rj" alt="Google Logo" className="w-6 h-6 mr-2" />
+          <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google Logo" className="w-6 h-6 mr-2" />
           Sign In with Google
         </button>
 
@@ -42,10 +42,6 @@ const handleGoogleSignIn = (e) => {
       </div>
       </div>
 
-      {/* Footer */}
-      <footer className="mt-10 text-center text-white">
-        <p>&copy; 2024 Blabber. All rights reserved.</p>
-      </footer>
     </div>
   );
 };

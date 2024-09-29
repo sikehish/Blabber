@@ -13,11 +13,11 @@ const jwt=require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 
 passport.use(new GoogleStrategy({
-clientID: process.env.GOOGLE_CLIENT_ID,
-clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-callbackURL: "/api/oauth/google/callback",
-scope:["profile","email"],
-passReqToCallback:true
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "/api/oauth/google/callback",
+  scope:["profile","email"],
+  passReqToCallback:true
 },
 async function(request, accessToken, refreshToken, profile, done) { 
     try {
