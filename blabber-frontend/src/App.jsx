@@ -21,7 +21,7 @@ function App() {
         <Route path="/success" element={state?.user ? <GoogleSuccess /> : <Navigate to="/" />} />
         <Route path="/failed" element={!state?.user ? <GoogleFailure /> : <Navigate to="/" />} />
         <Route path="/login" element={!state?.user ? <SignInPage /> : <Navigate to="/dashboard" />} />
-        <Route path="/dashboard" element={state?.user ? <Dashboard /> : <Navigate to="/" />} />
+        <Route path="/dashboard" element={state?.user ? <Dashboard /> : <Navigate to="/login" />} />
       </Routes>
       <ToastContainer />
       <Footer />
