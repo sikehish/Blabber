@@ -258,63 +258,114 @@ const checkElement = async (selector, text) => {
   return document.querySelector(selector);
 }
 
-// Shows a responsive notification of specified type and message
-function showNotification(extensionStatusJSON) {
-  // Banner CSS
-  let html = document.querySelector("html");
-  let obj = document.createElement("div");
-  let logo = document.createElement("img");
-  let text = document.createElement("p");
-
-  logo.setAttribute(
-    "src",
-    "https://i.imgur.com/wzbSgvY.png"
-  );
-  logo.setAttribute("height", "32px");
-  logo.setAttribute("width", "32px");
-  logo.style.cssText = "border-radius: 4px";
-
-  // Remove banner after 5s
-  setTimeout(() => {
-    obj.style.display = "none";
-  }, 5000);
-
-  if (extensionStatusJSON.status == 200) {
-    obj.style.cssText = `color: #2A9ACA; ${commonCSS}`;
-    text.innerHTML = extensionStatusJSON.message;
-  }
-  else {
-    obj.style.cssText = `color: orange; ${commonCSS}`;
-    text.innerHTML = extensionStatusJSON.message;
-  }
-
-  obj.prepend(text);
-  obj.prepend(logo);
-  if (html)
-    html.append(obj);
-}
-
-// CSS for notification
-const commonCSS = `background: rgb(255 255 255 / 10%); 
-    backdrop-filter: blur(16px); 
+const commonCSS = `
+    background: #f3f4f6; 
+    backdrop-filter: blur(10px); 
     position: fixed;
-    top: 5%; 
+    top: 2%; 
     left: 0; 
     right: 0; 
     margin-left: auto; 
     margin-right: auto;
-    max-width: 780px;  
+    max-width: 350px;  /* Reduced max width for a more compact look */
     z-index: 1000; 
-    padding: 0rem 1rem;
+    padding: 0.75rem 1rem;  /* Reduced padding for a sleeker look */
     border-radius: 8px; 
     display: flex; 
-    justify-content: center; 
+    justify-content: flex-start; 
     align-items: center; 
-    gap: 16px;  
-    font-size: 1rem; 
-    line-height: 1.5; 
+    gap: 12px;  /* Reduced gap between items */
+    font-size: 0.9rem;  /* Smaller font size */
+    line-height: 1.4;  /* Tighter line spacing */
     font-family: 'Google Sans',Roboto,Arial,sans-serif; 
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;`;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 12px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+    color: black;
+  `;
+  
+const logoCSS = `
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const logoImgCSS = `
+    width: 40px;  /* Smaller logo size */
+    height: 40px; 
+`;
+
+const logoTextCSS = `
+    font-size: 1rem;  /* Reduced font size */
+    font-weight: bold;
+    margin-left: 8px;  /* Space between icon and text */
+`;
+
+const dividerCSS = `
+    height: 60px;  /* Align height with logo */
+    width: 3px;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: 0 8px;
+`;
+
+const messageCSS = `
+    font-size: 0.9rem;  /* Smaller font size for message */
+    font-weight: 500;
+    color: #2c3e50; /* Subtle color for message text */
+`;
+
+function showNotification(extensionStatusJSON) { 
+    // Banner container
+    let html = document.querySelector("html");
+    let obj = document.createElement("div");
+    
+    // Logo container
+    let logoContainer = document.createElement("div");
+    logoContainer.style.cssText = logoCSS;
+    
+    // Logo image
+    let logo = document.createElement("img");
+    let logoText = document.createElement("p");
+    
+    // Notification text
+    let text = document.createElement("p");
+    
+    // Divider
+    let divider = document.createElement("div");
+    divider.style.cssText = dividerCSS;
+  
+    logo.setAttribute("src", "https://i.imgur.com/wzbSgvY.png");
+    logo.style.cssText = logoImgCSS;
+  
+    // Blabber text next to the logo
+    logoText.style.cssText = logoTextCSS;
+    logoText.innerHTML = "Blabber";
+    
+    // Message text styling
+    text.style.cssText = messageCSS;
+  
+    // Remove the banner after 5 seconds
+    setTimeout(() => {
+      obj.style.display = "none";
+    }, 5000);
+  
+    // Determine styles based on extension status
+    if (extensionStatusJSON.status == 200) {
+      obj.style.cssText = `background: #e0f7fa; color: black; ${commonCSS}`;
+      text.innerHTML = "Don't disable captions!!";
+    } else {
+      obj.style.cssText = `background: #ffebee; color: orange; ${commonCSS}`;
+      text.innerHTML = extensionStatusJSON.message;
+    }
+  
+    // Structure the notification banner
+    logoContainer.append(logo);
+    logoContainer.append(logoText);
+    
+    obj.append(logoContainer);
+    obj.append(divider);
+    obj.append(text);
+  
+    if (html) html.append(obj);
+}
 
 // Callback function to execute when transcription mutations are observed. 
 function transcriber(mutationsList, observer) {

@@ -11,6 +11,9 @@ const { checkAuth } = require('./middleware/authMiddleware');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt=require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const fs = require('fs');
+const path = require('path');
+
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
@@ -20,15 +23,15 @@ passport.use(new GoogleStrategy({
   passReqToCallback:true
 },
 async function(request, accessToken, refreshToken, profile, done) { 
-    try {
-      const email = profile?.emails[0]?.value;
-      let user = await User.findOne({ email });
-
-      if (!user) user = await User.create({ email, name: profile?.displayName });
-      return done(null, user); 
-    } catch (err) {
-      return done(err, false);
-    }
+  try {
+    const email = profile?.emails[0]?.value;
+    let user = await User.findOne({ email });
+    
+    if (!user) user = await User.create({ email, name: profile?.displayName });
+    return done(null, user); 
+  } catch (err) {
+    return done(err, false);
+  }
 } 
 ));
 
@@ -38,6 +41,8 @@ const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 
 app.use(cors());
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
@@ -50,29 +55,46 @@ mongoose.connect(MONGO_URI, {
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch((err) => console.error('Error connecting to MongoDB Atlas:', err));
 
-app.post('/api/meet', async (req, res) => {
-  try {
-    const meetData = req.body;
+  app.post('/api/meet', async (req, res) => {
+    try {
+      const meetData = req.body;
+  
+      // Check if the user exists based on blabberEmail
+      const email = meetData?.blabberEmail;
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        throw new Error("This email isn't registered!");
+      }
+  
+      // Prepare screenshots data if it exists
+      // console.log(meetData.screenshots)
+      console.log("SS1: ", meetData.screenshots)
+      // Prepare screenshots data if it exists and has valid filenames
+const screenshots = meetData.screenshots
+?.filter(screenshot => screenshot.filename) // Filter out screenshots without a filename
+.map(screenshot => ({
+  filename: screenshot.filename,
+  timestamp: screenshot.timestamp || new Date(), // Use provided timestamp or set to now
+  takenBy: screenshot.takenBy || email // Use blabberEmail if not provided
+})) || [];
 
-    const email=meetData?.blabberEmail
-    const user = await User.findOne({ email });
 
-    if(!user){
-        throw new Error("This email isn't registered!")
+      console.log("SS2: ",screenshots)
+      // Create a new meet object
+      const newMeet = new Meet({
+        ...meetData,
+        speakerDuration: new Map(Object.entries(meetData.speakerDuration)),
+        screenshots : screenshots
+      });
+  
+      await newMeet.save();
+      res.status(201).json({ message: 'Meet created successfully!', meet: newMeet });
+    } catch (error) {
+      console.error('Error creating meet:', error);
+      res.status(500).json({ message: 'Error creating meet', error });
     }
-
-    const newMeet = new Meet({
-      ...(req.body),speakerDuration: new Map(Object.entries(meetData.speakerDuration)), 
-    });
-
-    await newMeet.save();
-    res.status(201).json({ message: 'Meet created successfully!', meet: newMeet });
-  } catch (error) {
-    console.error('Error creating meet:', error);
-    res.status(500).json({ message: 'Error creating meet', error });
-  }
-});
-
+  });
 app.get('/api/users/check', checkAuth, async (req, res) => {
     try {
         // console.log(req.user, req.cookies.token)
@@ -207,6 +229,34 @@ app.post('/api/register-from-extension', async (req, res) => {
   }
 });
 
+app.post('/api/upload-screenshot', (req, res) => {
+  const { filename, imageData, email } = req.body;
+
+  // Directory path based on blabberEmail
+  const directoryPath = path.join(__dirname, 'screenshots', email);
+
+  // Create directory if it doesn't exist
+  fs.mkdir(directoryPath, { recursive: true }, (err) => {
+      if (err) {
+          console.error('Error creating directory:', err);
+          return res.status(500).json({ error: 'Failed to create directory' });
+      }
+
+      // Write file to the directory
+      const filePath = path.join(directoryPath, filename);
+      const base64Data = imageData.split(',')[1]; // Remove the data URL prefix
+
+      fs.writeFile(filePath, base64Data, { encoding: 'base64' }, (err) => {
+          if (err) {
+              console.error('Error writing file:', err);
+              return res.status(500).json({ error: 'Failed to write file' });
+          }
+
+          console.log(`File saved: ${filePath}`);
+          res.status(200).json({ message: 'Screenshot uploaded successfully', filename });
+      });
+  });
+});
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
