@@ -3,73 +3,81 @@
 <html>
 <head>
   <title>Blabber - Generate custom meeting recaps, reports, and transcripts using AI</title>
+  
   <style>
     body {
-      width: 360px;
+      width: 300px;
+      height: 340px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle, #a6a6a6, #ffffff);
+      font-family: Arial, sans-serif;
+      margin: 0;
     }
     .wrapper-div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10px;
-    }
-    .italics {
-      font-style: italic;
+      text-align: center;
     }
     .logo {
-      font-size: 3rem;
-      text-align: center;
-      margin-bottom: 5px;
-      padding-bottom: 0;
-      background: -webkit-linear-gradient( #ad00a2, #0c2eed);
+      font-size: 3.0rem;
+      font-weight: bold;
+      background: -webkit-linear-gradient(#00b7c5, #5800c5);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
     }
     .details {
-      font-weight: 500;
+      font-size: 0.85rem;
+      font-weight: 550;
+      color: #7114b7;
+      margin-bottom: 20px;
     }
     .all-set {
-      font-size: 1.1rem;
-      font-weight: 300;
-      font-style: italic;
-      margin-top: 0;
-      text-decoration: underline #ad00a2;
+      font-size: 1.0rem;
+      font-weight: 600;
+      color: #151515;
+      margin: 15px 0;
     }
-    .view-previous {
-      font-size: 1.2rem;
-      font-weight: 500;
-      font-style: italic;
-      color: #fff;
-      background-color: #0c2eed;
-      font-family: 'Gill Sans';
-      border: solid 2px #0c2eed;
-      padding: 7px;
-      border-radius: 10px;
+    .action-buttons {
+      display: flex;
+      justify-content: center; /* Center align the buttons */
+      gap: 15px; /* Add space between the buttons */
+      margin-top: 20px;
+    }
+    .icon-button {
+      display: flex;
+      flex-direction: column; /* Stack icon and label vertically */
+      align-items: center; /* Center the items */
       text-decoration: none;
-      transition: all 0.2s ease-in-out;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      background-color: #7000c500;
+      border: 2px solid #7000c500;
+      padding: 10px;
+      border-radius: 10px;
+      width: 100px;
+      text-align: center;
+      transition: all 0.2s ease;
     }
-    .view-previous:hover {
-      background-color: #ad00a2;
-      border: solid 2px #ad00a2;
+    .icon-button:hover {
+      background-color: #5f00c561;
+      border-color: #5900c500;
     }
     #email {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 300;
       font-style: italic;
       margin-top: 0;
     }
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    .icon {
+      width: 24px;
+      height: 24px;
     }
-    button:hover {
-      background-color: #45a049;
+    .label {
+      font-size: 0.75rem; /* Adjust label font size */
+      color: #151515; /* Label color */
+      margin-top: 5px; /* Space between icon and label */
     }
   </style>
 </head>
@@ -77,14 +85,26 @@
 <body>
   <div class="wrapper-div">
     <h1 class="logo">Blabber</h1>
-    <p class="details italics">Generate custom meeting recaps, reports, and transcripts using AI</p>
+    <p class="details">Generate custom meeting recaps, reports, and transcripts using AI</p>
     <p id="email"></p>
     <div class="signed-in-only">
-      <p class="details all-set">You're all set!</p>
-    <a href="#" class="view-previous">View Previous Meetings</a>
-    <button id="screenshot-btn">Capture</button>
+      <p class="all-set">You are all set!</p>
+      <div class="action-buttons">
+        <!-- View Previous Meetings with Icon and Label -->
+        <a href="#" class="icon-button" title="View Previous Meetings">
+          <img src="https://i.imgur.com/PkQVqze.png" alt="View Meetings" class="icon">
+          <span class="label">View Previous Meetings</span>
+        </a>
+        
+        <!-- Screenshot Capture with Icon and Label -->
+        <a href="#" id="screenshot-btn" class="icon-button" title="Capture Screenshot">
+          <img src="https://i.imgur.com/ylQ2D6k.png" alt="Capture" class="icon">
+          <span class="label">Capture</span>
+        </a>
+      </div>
     </div>
   </div>
+  
   <script src="popup.js"></script>
 </body>
 
