@@ -71,34 +71,76 @@ mongoose.connect(MONGO_URI, {
         throw new Error("This email isn't registered!");
       }
   
-      // Prepare screenshots data if it exists
-      // console.log(meetData.screenshots)
-      // console.log("SS1: ", meetData.screenshots)
-      // Prepare screenshots data if it exists and has valid filenames
-const screenshots = meetData.screenshots
-?.filter(screenshot => screenshot.filename) // Filter out screenshots without a filename
-.map(screenshot => ({
-  filename: screenshot.filename,
-  timestamp: screenshot.timestamp || new Date(), // Use provided timestamp or set to now
-  takenBy: screenshot.takenBy || email // Use blabberEmail if not provided
-})) || [];
-
-
-      // console.log("SS2: ",screenshots)
-      // Create a new meet object
+      // Process screenshots if provided
+      const screenshots = meetData.screenshots
+        ?.filter(screenshot => screenshot.filename) // Filter out screenshots without a filename
+        .map(screenshot => ({
+          filename: screenshot.filename,
+          timestamp: screenshot.timestamp || new Date(), // Use provided timestamp or set to now
+          takenBy: screenshot.takenBy || email // Use blabberEmail if not provided
+        })) || [];
+  
+      // Create new Meet instance
       const newMeet = new Meet({
         ...meetData,
         speakerDuration: new Map(Object.entries(meetData.speakerDuration)),
-        screenshots : screenshots
+        screenshots: screenshots
       });
   
+      // Save the meet
       await newMeet.save();
+  
+      // Check if autoEnabled is true for the user
+      if (user.autoEnabled) {
+        const payload = { meeting_data: newMeet, report_format: 'pdf', report_type: 'normal' };
+  
+        // Call the AI server to generate the report
+        const response = await fetch(AI_SERVER_URL + '/report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+  
+        if (response.ok) {
+        const reportBuffer = Buffer.from(await response.arrayBuffer());  
+          // Prepare email transporter
+          const transporter = nodemailer.createTransport({
+            service: 'gmail', // Use your email service
+            auth: {
+              user: process.env.EMAIL_USER, // Sender email
+              pass: process.env.EMAIL_PASS, // Email password
+            },
+          });
+  
+          // Send email with the report
+          await transporter.sendMail({
+            from: process.env.EMAIL_USER, // Sender email
+            to: email, // Send to the user
+            subject: `Your Report for ${newMeet.meetingTitle}`, // Email subject
+            text: 'Please find the attached report for your recent meet.', // Email body
+            attachments: [
+              {
+                filename: 'report.pdf', // Attachment filename
+                content: reportBuffer, // Attach the report as a buffer
+              },
+            ],
+          });
+  
+          console.log('Email with report sent to', email);
+        } else {
+          console.error('Failed to generate report:', response.statusText);
+        }
+      }
+  
       res.status(201).json({ message: 'Meet created successfully!', meet: newMeet });
     } catch (error) {
       console.error('Error creating meet:', error);
       res.status(500).json({ message: 'Error creating meet', error });
     }
   });
+  
 app.get('/api/users/check', checkAuth, async (req, res) => {
     try {
         // console.log(req.user, req.cookies.token)
@@ -346,6 +388,27 @@ app.post('/api/get-report', checkAuth, async (req, res) => {
   }
 });
 
+app.get('/api/auto-enabled', checkAuth, async (req, res) => {
+  try {
+    const user = await User.findOne({email: req.user.email}); // Assuming req.user.id is populated by checkAuth middleware
+    res.json({ autoEnabled: user.autoEnabled });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching auto-enabled status' });
+  }
+});
+
+app.post('/api/auto-enabled', checkAuth, async (req, res) => {
+  const { autoEnabled } = req.body;
+  
+  try {
+    const user = await User.findOne({email: req.user.email});
+    user.autoEnabled = autoEnabled;
+    await user.save();
+    res.status(200).json({ message: 'Auto-enabled status updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating auto-enabled status' });
+  }
+});
 
 // Start the server
 app.listen(PORT, () => {

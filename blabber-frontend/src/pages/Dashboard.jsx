@@ -6,6 +6,7 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+  const [autoEnabled, setAutoEnabled] = useState(false); // State for auto-enabled toggle
 
   useEffect(() => {
     const fetchMeets = async () => {
@@ -14,13 +15,13 @@ const Dashboard = () => {
 
       try {
         const response = await fetch('/api/meet', {
-            method: "GET",
-            credentials: 'include'
-        }); // Adjust the URL if needed
+          method: "GET",
+          credentials: 'include'
+        });
 
         const data = await response.json();
-        if(!(response.ok)) throw(data)
-        setMeets(data || []); // Assuming your API returns an object with a "meets" array
+        if (!response.ok) throw (data);
+        setMeets(data || []); // Assuming your API returns an array of meets
       } catch (error) {
         setError(error.message); // Set error message
       } finally {
@@ -28,13 +29,63 @@ const Dashboard = () => {
       }
     };
 
+    const fetchAutoEnabled = async () => {
+      // Fetch the auto-enabled state for the user from the server
+      try {
+        const response = await fetch('/api/auto-enabled', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const { autoEnabled } = await response.json();
+        setAutoEnabled(autoEnabled || false);
+      } catch (error) {
+        console.error("Error fetching auto-enabled status:", error);
+      }
+    };
+
     fetchMeets();
+    fetchAutoEnabled();
   }, []);
-  console.log(meets)
+
+  const handleToggleChange = async () => {
+    setAutoEnabled(!autoEnabled); // Toggle the state
+
+    // Send updated autoEnabled state to the server
+    try {
+      await fetch('/api/auto-enabled', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ autoEnabled: !autoEnabled }),
+      });
+    } catch (error) {
+      console.error("Error updating auto-enabled status:", error);
+    }
+  };
+
   return (
-    <div className="relative"> {/* Wrap content in a relative div for positioning */}
+    <div className="relative">
       <div className="flex flex-col items-center p-6">
-        <h1 className="text-4xl font-bold mb-4">Your Meetings</h1>
+        <div className="flex justify-between w-full items-center mb-4">
+          <h1 className="text-2xl font-bold">Meet Dashboard</h1>
+          
+          <div className="flex items-center">
+            <span className="mr-2 text-gray-700">Auto-send report after meet</span>
+            <button
+              className={`relative inline-flex items-center h-6 rounded-full w-11 focus:outline-none ${autoEnabled ? 'bg-green-500' : 'bg-gray-300'}`}
+              onClick={handleToggleChange}
+            >
+              <span
+                className={`inline-block w-5 h-5 transform bg-white rounded-full transition-transform ${
+                  autoEnabled ? 'translate-x-5' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
         {loading && (
           <div className="text-lg text-gray-500">Loading meets...</div>
         )}
