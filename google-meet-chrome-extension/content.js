@@ -332,7 +332,7 @@ function showNotification(extensionStatusJSON) {
     let divider = document.createElement("div");
     divider.style.cssText = dividerCSS;
   
-    logo.setAttribute("src", "https://imgur.com/XssOgZr.png");
+    logo.setAttribute("src", "https://i.imgur.com/pgOwCjJ.png");
     logo.style.cssText = logoImgCSS;
   
     // Blabber text next to the logo
