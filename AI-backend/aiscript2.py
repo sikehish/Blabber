@@ -59,6 +59,26 @@ def analyze_speech(transcript_data):
     
     return analysis_results, sentiment_summary
 
+def generate_summary_and_takeaways(analysis_results):
+    """Generate overall summary and key takeaways based on analysis."""
+    overall_summary = "Summary of the meeting:"
+    key_takeaways = []
+
+    if analysis_results:
+        for entry in analysis_results:
+            speaker = entry['speaker']
+            sentiment = entry['sentiment_category']
+            content = entry['content']
+            
+            # Improved phrasing for clarity
+            takeaway = f"{speaker} expressed a {sentiment.lower()} sentiment, stating: '{content}'"
+            key_takeaways.append(takeaway)
+
+    # Summarize key takeaways using the summarization model
+    summarized_takeaways = summarize_takeaways(key_takeaways)
+    
+    return overall_summary, summarized_takeaways
+
 
 def create_report_with_interval_sections_pdf(meeting_data, interval_minutes):
     """Generates a PDF report divided into time intervals (in minutes) with summaries and key takeaways."""
@@ -186,8 +206,6 @@ from transformers import pipeline
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem
 
-# Load the summarization model
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
 
 def summarize_text(text, max_length=50, min_length=5):
     """Summarize the provided text."""
