@@ -51,28 +51,29 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "capture_screenshot") {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const currentTab = tabs[0];
-  
-        // Check if the current tab's URL matches Google Meet
-        if (currentTab.url.includes("https://meet.google.com")) {
-          chrome.tabs.captureVisibleTab(null, { format: 'png' }, (dataUrl) => {
-            if (chrome.runtime.lastError || !dataUrl) {
-              alert('Failed to capture screenshot: ' + (chrome.runtime.lastError?.message || 'Unknown error.'));
-              sendResponse({ success: false }); // Indicate failure
-            } else {
-              downloadScreenshot(dataUrl);
-              storeScreenshotUrl(dataUrl); // Store the screenshot URL
-              sendResponse({ success: true }); // Indicate success
-            }
-          });
-          return true; // Keep the messaging channel open for asynchronous response
-        } else {
-          sendResponse({ success: false }); // Not a Google Meet page
-        }
-      });
-    }
-
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          const currentTab = tabs[0];
+      
+          // Regular expression to match Google Meet URLs with a meet ID
+          const meetUrlRegex = /^https:\/\/meet\.google\.com\/([a-z]{3}-[a-z]{4}-[a-z]{3})$/;
+      
+          // Check if the current tab's URL matches Google Meet and contains a valid meet ID
+          if (meetUrlRegex.test(currentTab.url)) {
+            chrome.tabs.captureVisibleTab(null, { format: 'png' }, (dataUrl) => {
+              if (chrome.runtime.lastError || !dataUrl) {
+                alert('Failed to capture screenshot: ' + (chrome.runtime.lastError?.message || 'Unknown error.'));
+                sendResponse({ success: false }); // Indicate failure
+              } else {
+                storeScreenshotUrl(dataUrl); // Store the screenshot URL
+                sendResponse({ success: true }); // Indicate success
+              }
+            });
+            return true; // Keep the messaging channel open for asynchronous response
+          } else {
+            sendResponse({ success: false }); // Not a valid Google Meet page
+          }
+        });
+      }      
 
     if (message.type == "new_meeting_started") {
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -169,25 +170,6 @@ function updateScreenshotsInStorage(uniqueFilename, blabberEmail) {
     });
 }
   
-  function downloadScreenshot(dataUrl) {
-    chrome.downloads.download({
-      url: dataUrl,
-      filename: 'screenshot.png',
-      saveAs: false  // Automatically save to the Downloads folder without user prompt
-    }, (downloadId) => {
-      if (chrome.runtime.lastError) {
-        alert('Error downloading screenshot: ' + chrome.runtime.lastError.message);
-      } else {
-        chrome.downloads.search({ id: downloadId }, (results) => {
-        //   if (results && results.length > 0) {
-        //     alert('Screenshot captured and saved to: ' + results[0].filename);
-        //   } else {
-        //     alert('Screenshot captured, but could not retrieve the download path.');
-        //   }
-        });
-      }
-    });
-  }
 
   chrome.tabs.onRemoved.addListener(function (tabid) {
     chrome.storage.local.get(["meetingTabId"], function (data) {
