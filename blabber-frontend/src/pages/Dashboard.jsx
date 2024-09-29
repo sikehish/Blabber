@@ -72,9 +72,9 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold">Meet Dashboard</h1>
           
           <div className="flex items-center">
-            <span className="mr-2 text-gray-700">Auto-send report after meet</span>
+            <span className="mr-2 text-gray-700">Get email report after every meet</span>
             <button
-              className={`relative inline-flex items-center h-6 rounded-full w-11 focus:outline-none ${autoEnabled ? 'bg-green-500' : 'bg-gray-300'}`}
+              className={`relative inline-flex items-center h-6 rounded-full w-11 focus:outline-none ${autoEnabled ? 'bg-blue-500' : 'bg-gray-300'}`}
               onClick={handleToggleChange}
             >
               <span

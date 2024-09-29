@@ -14,7 +14,6 @@ def get_report():
         "report_format": "pdf"/"docx"
     }'''
     receieved_data = request.json
-    print("Recieved data",receieved_data)
 
     if not receieved_data:
         return jsonify({'error':'No data received'}), 400
