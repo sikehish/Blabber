@@ -13,6 +13,8 @@ const jwt=require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
+const { pipeline } = require('stream');
+const { Readable } = require('stream');
 
 
 passport.use(new GoogleStrategy({
@@ -39,6 +41,7 @@ async function(request, accessToken, refreshToken, profile, done) {
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
+const AI_SERVER_URL = process.env.AI_SERVER_URL;
 
 app.use(cors());
 app.use(express.json({limit: '50mb'}));
@@ -255,6 +258,53 @@ app.post('/api/upload-screenshot', (req, res) => {
       });
   });
 });
+
+app.post('/api/get-report', async (req, res) => {
+  const { meeting_id, report_format, report_type } = req.body;
+
+  // Find the meet based on the meeting_id
+  const meet = await Meet.findById(meeting_id);
+
+  if (!meet) {
+      return res.status(404).json({ message: 'Meet not found' });
+  } else {
+      fetch(AI_SERVER_URL+'/report', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({meeting_data:meet, report_format, report_type})
+      }).then(async (response) => {
+        try {
+            if (response.ok) {
+              console.log(response)
+              res.setHeader('Content-Disposition', response.headers.get('content-disposition'));
+              res.setHeader('Content-Type', response.headers.get('content-type'));
+              // Convert the fetch response.body (ReadableStream) into a Node.js Readable stream
+              const nodeReadableStream = Readable.from(response.body);
+              // Pipe the Node.js readable stream to the client response
+              pipeline(nodeReadableStream, res, (err) => {
+                if (err) {
+                  console.error('Pipeline failed', err);
+                  res.status(500).json({ message: 'Failed to stream the file', error: err });
+                } else {
+                  console.log('Pipeline succeeded');
+                }
+              });
+            } else {
+              res.status(response.status).json({ message: 'Failed to generate report', error: response.statusText });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ message: 'Failed to generate report', error });
+        }
+      }).catch((error) => {
+          console.error('Error:', error);
+      });
+      // return res.status(200).json({ message: 'Report generation success' });
+  }
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
