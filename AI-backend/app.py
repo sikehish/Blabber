@@ -9,6 +9,10 @@ app = Flask(__name__)
 @app.route('/report',methods=['POST'])
 def get_report():
     receieved_data = request.json
+
+    if not receieved_data:
+        return jsonify({'error':'No data received'}), 400
+
     meeting_data = receieved_data['meeting_data']
     report_type = receieved_data['report_type']
     report_format = receieved_data['report_format']
