@@ -8,7 +8,13 @@ app = Flask(__name__)
 
 @app.route('/report',methods=['POST'])
 def get_report():
+    '''Expecting: {
+        "meeting_data": {},
+        "report_type": "normal"/"speaker_ranking"/"sentiment",
+        "report_format": "pdf"/"docx"
+    }'''
     receieved_data = request.json
+    print("Recieved data",receieved_data)
 
     if not receieved_data:
         return jsonify({'error':'No data received'}), 400
