@@ -183,7 +183,7 @@ app.get('/api/oauth/google/callback', passport.authenticate('google', { session:
     res.cookie('token', token, {
       httpOnly: true,
       secure: false,
-      sameSite: 'none',  
+      // sameSite: 'none',  
       maxAge: 5 * 24 * 60 * 60 * 1000 
     });
  
