@@ -32,7 +32,7 @@ function Navbar() {
             </span>
             <button
               onClick={handleLogout}
-              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition"
+              className="bg-red-600 text-white py-1 px-2 rounded-lg hover:bg-red-700 transition"
             >
               Logout
             </button>

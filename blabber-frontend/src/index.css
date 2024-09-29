@@ -28,6 +28,7 @@
 @layer base {
   html {
     font-family: 'notoserif', serif;
+    min-height: 100vh;
   }
 }
 
