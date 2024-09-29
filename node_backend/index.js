@@ -260,10 +260,12 @@ app.post('/api/upload-screenshot', (req, res) => {
 });
 
 app.post('/api/get-report', checkAuth,async (req, res) => {
-  const { meeting_id, meeting_title, report_format, report_type } = req.body;
-
+  const { meeting_id, meeting_title, report_format, report_type, report_interval } = req.body;
+  console.log(report_type, report_interval)
   // Find the meet based on the meeting_id
   const meet = await Meet.findById(meeting_id);
+  const payload={meeting_data:meet, report_format, report_type}
+  if(report_interval) payload.report_interval=Number(report_interval)
   
   if (!meet) {
     return res.status(404).json({ message: 'Meet not found' });
@@ -276,9 +278,10 @@ app.post('/api/get-report', checkAuth,async (req, res) => {
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify({meeting_data:meet, report_format, report_type, report_interval})
+          body: JSON.stringify(payload)
       }).then(async (response) => {
         try {
+          // console.log(response)
             if (response.ok) {
               res.setHeader('Content-Disposition', response.headers.get('content-disposition'));
               res.setHeader('Content-Type', response.headers.get('content-type'));

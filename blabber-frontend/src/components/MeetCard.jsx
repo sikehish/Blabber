@@ -31,7 +31,8 @@ const calculateDuration = (start, end) => {
 const reportTypes = [
     { value: 'normal', label: 'Report' },
     { value: 'speaker_ranking', label: 'Speaker Report' },
-    { value: 'sentiment', label: 'Sentiment Report' }
+    { value: 'sentiment', label: 'Sentiment Report' },
+    { value: 'interval', label: 'Interval Based Report' }
   ];
   
   const reportFormats = [
@@ -64,7 +65,9 @@ const reportTypes = [
     const [reportFormat, setReportFormat] = useState('');
     const [meetingTitle, setMeetingTitle] = useState(meet.meetingTitle); // Use meet title from props
     const [loading, setLoading] = useState(false);
+    const [interval, setInterval]=useState(undefined)
     const [error, setError] = useState(null);
+    const [emails, setEmails] = useState(['']); // Start with one empty email field
   
     const openModal = () => {
       setIsModalOpen(true);
@@ -86,7 +89,10 @@ const reportTypes = [
         report_type: reportType,
         report_format: reportFormat,
         meeting_id: meet._id,
+        report_interval: interval
       };
+
+      if(interval) payload[interval]=interval
   
       try {
         const response = await fetch('/api/get-report', {
@@ -167,83 +173,132 @@ const reportTypes = [
 
             {/* Modal for Report Generation */}
             <Modal
-                isOpen={isModalOpen}
-                onRequestClose={closeModal}
-                style={customStyles}
-                contentLabel="Generate Report Modal"
+    isOpen={isModalOpen}
+    onRequestClose={closeModal}
+    style={customStyles}
+    contentLabel="Generate Report Modal"
+>
+    <h2 className="text-xl font-bold mb-4">Generate Report for {meetingTitle}</h2>
+
+    <form onSubmit={handleGenerateReport}>
+        {/* Meeting Title */}
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Meeting Title:</label>
+            <input
+                type="text"
+                value={meetingTitle}
+                onChange={(e) => setMeetingTitle(e.target.value)}
+                className="border rounded w-full py-2 px-3 text-gray-700"
+            />
+        </div>
+
+        {/* Report Type Dropdown */}
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Report Type:</label>
+            <select
+                value={reportType}
+                onChange={(e) => {
+                    setReportType(e.target.value);
+                    setInterval(undefined); // Reset the interval when report type changes
+                }}
+                className="border rounded w-full py-2 px-3 text-gray-700"
+                required
             >
-                <h2 className="text-xl font-bold mb-4">Generate Report for {meetingTitle}</h2>
+                <option value="">Select Report Type</option>
+                {reportTypes.map((type) => (
+                    <option key={type.value} value={type.value}>
+                        {type.label}
+                    </option>
+                ))}
+            </select>
 
-                <form onSubmit={handleGenerateReport}>
-                    {/* Meeting Title */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Meeting Title:</label>
+            {/* Conditional rendering for interval input */}
+            {reportType === "interval" && (
+                <input
+                    type="number"
+                    min="1"
+                    value={interval}
+                    onChange={(e) => setInterval(e.target.value)}
+                    className="border rounded w-full py-2 px-3 text-gray-700 mt-2"
+                    placeholder="Enter interval"
+                />
+            )}
+        </div>
+
+        {/* Report Format Dropdown */}
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Report Format:</label>
+            <select
+                value={reportFormat}
+                onChange={(e) => setReportFormat(e.target.value)}
+                className="border rounded w-full py-2 px-3 text-gray-700"
+                required
+            >
+                <option value="">Select Report Format</option>
+                {reportFormats.map((format) => (
+                    <option key={format.value} value={format.value}>
+                        {format.label}
+                    </option>
+                ))}
+            </select>
+        </div>
+
+        {/* Email Input Field */}
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Email Addresses:</label>
+            <div className="flex flex-col">
+                {emails.map((email, index) => (
+                    <div key={index} className="flex items-center mb-2">
                         <input
-                            type="text"
-                            value={meetingTitle}
-                            onChange={(e) => setMeetingTitle(e.target.value)}
-                            className="border rounded w-full py-2 px-3 text-gray-700"
+                            type="email"
+                            value={email}
+                            onChange={(e) => handleEmailChange(e, index)}
+                            className="border rounded w-full py-2 px-3 text-gray-700 mr-2"
+                            placeholder="Enter email"
+                            required
                         />
-                    </div>
-
-                    {/* Report Type Dropdown */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Report Type:</label>
-                        <select
-                            value={reportType}
-                            onChange={(e) => setReportType(e.target.value)}
-                            className="border rounded w-full py-2 px-3 text-gray-700"
-                            required
-                        >
-                            <option value="">Select Report Type</option>
-                            {reportTypes.map((type) => (
-                                <option key={type.value} value={type.value}>
-                                    {type.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Report Format Dropdown */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Report Format:</label>
-                        <select
-                            value={reportFormat}
-                            onChange={(e) => setReportFormat(e.target.value)}
-                            className="border rounded w-full py-2 px-3 text-gray-700"
-                            required
-                        >
-                            <option value="">Select Report Format</option>
-                            {reportFormats.map((format) => (
-                                <option key={format.value} value={format.value}>
-                                    {format.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="flex justify-end">
-                        {error && <p className="text-red-500 mb-4">{error}</p>}
-
                         <button
                             type="button"
-                            className="mr-2 px-4 py-2 bg-gray-300 rounded"
-                            onClick={closeModal}
-                            disabled={loading}
+                            onClick={() => removeEmail(index)}
+                            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                         >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className={`px-4 py-2 bg-blue-500 text-white rounded ${loading ? 'opacity-50' : 'hover:bg-blue-600'}`}
-                            disabled={loading}
-                        >
-                            {loading ? 'Generating...' : 'Generate Report'}
+                            Remove
                         </button>
                     </div>
-                </form>
-            </Modal>
+                ))}
+                <button
+                    type="button"
+                    onClick={addEmail}
+                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                >
+                    Add Another Email
+                </button>
+            </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-end">
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+
+            <button
+                type="button"
+                className="mr-2 px-4 py-2 bg-gray-300 rounded"
+                onClick={closeModal}
+                disabled={loading}
+            >
+                Cancel
+            </button>
+            <button
+                type="submit"
+                className={`px-4 py-2 bg-blue-500 text-white rounded ${loading ? 'opacity-50' : 'hover:bg-blue-600'}`}
+                disabled={loading}
+            >
+                {loading ? 'Generating...' : 'Generate Report'}
+            </button>
+        </div>
+    </form>
+</Modal>
+
         </div>
     );
 };
