@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const validator = require('validator');
-const { isEmail, isStrongPassword } = require('validator');
 
 // User Schema definition
 const userSchema = new mongoose.Schema({
@@ -15,7 +12,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
-    validate: [isEmail, 'Entered email address not valid!']
+    validate: [validator.isEmail, 'Entered email address not valid!']
+  },
+  autoEnabled: {
+    type: Boolean,
+    default: false // Set default to false
   }
 });
 
