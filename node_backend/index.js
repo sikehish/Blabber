@@ -259,15 +259,18 @@ app.post('/api/upload-screenshot', (req, res) => {
   });
 });
 
-app.post('/api/get-report', async (req, res) => {
-  const { meeting_id, report_format, report_type } = req.body;
+app.post('/api/get-report', checkAuth,async (req, res) => {
+  const { meeting_id, meeting_title, report_format, report_type } = req.body;
 
   // Find the meet based on the meeting_id
   const meet = await Meet.findById(meeting_id);
-
+  
   if (!meet) {
-      return res.status(404).json({ message: 'Meet not found' });
+    return res.status(404).json({ message: 'Meet not found' });
   } else {
+      meet.meetingTitle=meeting_title
+      await meet.save()
+      console.log(meet)
       fetch(AI_SERVER_URL+'/report', {
           method: 'POST',
           headers: {
