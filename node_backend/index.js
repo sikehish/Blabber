@@ -42,6 +42,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 const AI_SERVER_URL = process.env.AI_SERVER_URL;
+let reportBuffer = []; // Buffer to store report data
 
 app.use(cors());
 app.use(express.json({limit: '50mb'}));
@@ -259,56 +260,92 @@ app.post('/api/upload-screenshot', (req, res) => {
   });
 });
 
-app.post('/api/get-report', checkAuth,async (req, res) => {
-  const { meeting_id, meeting_title, report_format, report_type, report_interval } = req.body;
-  console.log(report_type, report_interval)
+
+app.post('/api/get-report', checkAuth, async (req, res) => {
+  const { meeting_id, meeting_title, report_format, report_type, report_interval, emails } = req.body;
+
+  // Validate emails
+  const validEmails = emails.filter(email => email && email.includes('@')); // Simple email validation
+
   // Find the meet based on the meeting_id
   const meet = await Meet.findById(meeting_id);
-  const payload={meeting_data:meet, report_format, report_type}
-  if(report_interval) payload.report_interval=Number(report_interval)
-  
+  const payload = { meeting_data: meet, report_format, report_type };
+  if (report_interval) payload.report_interval = Number(report_interval);
+
   if (!meet) {
-    return res.status(404).json({ message: 'Meet not found' });
+      return res.status(404).json({ message: 'Meet not found' });
   } else {
-      meet.meetingTitle=meeting_title
-      await meet.save()
-      console.log(meet)
-      fetch(AI_SERVER_URL+'/report', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload)
-      }).then(async (response) => {
-        try {
-          // console.log(response)
-            if (response.ok) {
+      meet.meetingTitle = meeting_title;
+      await meet.save();
+      console.log(meet);
+
+      try {
+          const response = await fetch(AI_SERVER_URL + '/report', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(payload),
+          });
+
+          if (response.ok) {
               res.setHeader('Content-Disposition', response.headers.get('content-disposition'));
               res.setHeader('Content-Type', response.headers.get('content-type'));
+
+              // Create a buffer to store the report data
+              const reportBuffer = [];
+
               // Convert the fetch response.body (ReadableStream) into a Node.js Readable stream
               const nodeReadableStream = Readable.from(response.body);
-              // Pipe the Node.js readable stream to the client response
-              pipeline(nodeReadableStream, res, (err) => {
-                if (err) {
-                  console.error('Pipeline failed', err);
-                  res.status(500).json({ message: 'Failed to stream the file', error: err });
-                } else {
-                  console.log('Pipeline succeeded');
-                }
+
+              // Pipe the stream to the response for downloading
+              nodeReadableStream.pipe(res);
+
+              // Collect the data into the buffer for emailing
+              nodeReadableStream.on('data', (chunk) => {
+                  reportBuffer.push(chunk);
               });
-            } else {
+
+              // Once the stream ends, send the email
+              nodeReadableStream.on('end', async () => {
+                  // Convert buffer to a single buffer
+                  const reportData = Buffer.concat(reportBuffer);
+
+                  // Prepare email transporter
+                  const transporter = nodemailer.createTransport({
+                      service: 'gmail', // or any other email service
+                      auth: {
+                          user: process.env.EMAIL_USER, // Your email
+                          pass: process.env.EMAIL_PASS, // Your email password
+                      },
+                  });
+
+                  // Send email to each valid email address
+                  for (const email of validEmails) {
+                      await transporter.sendMail({
+                          from: process.env.EMAIL_USER, // Sender address
+                          to: email, // List of recipients
+                          subject: `Your Report for ${meeting_title}`, // Subject line
+                          text: 'Please find the attached report.', // Plain text body
+                          attachments: [
+                              {
+                                  filename: 'report.pdf', // Adjust the filename as necessary
+                                  content: reportData, // Attach the report buffer
+                              },
+                          ],
+                      });
+                  }
+              });
+          } else {
               res.status(response.status).json({ message: 'Failed to generate report', error: response.statusText });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            res.status(500).json({ message: 'Failed to generate report', error });
-        }
-      }).catch((error) => {
+          }
+      } catch (error) {
           console.error('Error:', error);
-      });
-      // return res.status(200).json({ message: 'Report generation success' });
+          res.status(500).json({ message: 'Failed to generate report', error });
+      }
   }
 });
+
 
 // Start the server
 app.listen(PORT, () => {
