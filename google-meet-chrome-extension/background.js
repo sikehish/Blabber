@@ -62,6 +62,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               sendResponse({ success: false }); // Indicate failure
             } else {
               downloadScreenshot(dataUrl);
+              storeScreenshotUrl(dataUrl); // Store the screenshot URL
               sendResponse({ success: true }); // Indicate success
             }
           });
@@ -86,9 +87,87 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             console.log("Meeting tab id cleared")
         })
         sendToBackend()
+        clearScreenshots()
     }
     return true
   });
+
+//   function storeScreenshotUrl(dataUrl) {
+//     chrome.storage.local.get({ screenshots: [] }, (result) => {
+//       const screenshots = result.screenshots;
+//       screenshots.push(dataUrl); // Add the new screenshot URL to the array
+  
+//     //   // Optionally limit the number of stored screenshots
+//     //   if (screenshots.length > 10) {
+//     //     screenshots.shift(); // Remove the oldest screenshot if exceeding limit
+//     //   }
+  
+//       // Save the updated array back to storage
+//       chrome.storage.local.set({ screenshots: screenshots }, () => {
+//         console.log('Screenshots updated in storage:', screenshots);
+//       });
+//     });
+//   }
+  
+function storeScreenshotUrl(dataUrl) {
+    // Generate a unique filename using the current timestamp
+    const uniqueFilename = `screenshot_${Date.now()}.png`;
+
+    // Fetch the blabberEmail from Chrome storage
+    chrome.storage.local.get('oauthEmail', (result) => {
+        const blabberEmail = result.oauthEmail;
+
+        if (blabberEmail) {
+            // Prepare the data to send to your backend
+            const payload = {
+                filename: uniqueFilename,
+                imageData: dataUrl,
+                email: blabberEmail // Include the email in the payload
+            };
+
+            // Make a network request to your backend to send the image
+            fetch('http://localhost:3000/api/upload-screenshot', { // Replace with your actual backend URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Screenshot sent to backend successfully:', data);
+                // Update the screenshots array in Chrome storage
+                updateScreenshotsInStorage(uniqueFilename, blabberEmail);
+            })
+            .catch((error) => {
+                console.error('Error sending screenshot to backend:', error);
+            });
+        } else {
+            console.error('blabberEmail not found in storage.');
+        }
+    });
+}
+
+// Function to update the screenshots array in Chrome storage
+function updateScreenshotsInStorage(uniqueFilename, blabberEmail) {
+    const timestamp = new Date().toISOString();
+    console.log(uniqueFilename)
+    const screenshotEntry = {
+        filename: `${uniqueFilename}`,
+        timestamp: timestamp,
+        takenBy: blabberEmail
+    };
+
+    chrome.storage.local.get({ screenshots: [] }, (result) => {
+        const screenshots = result.screenshots;
+        screenshots.push(screenshotEntry); // Add new screenshot entry
+
+        // Save the updated array back to storage
+        chrome.storage.local.set({ screenshots: screenshots }, () => {
+            console.log('Screenshots updated in storage:', screenshots);
+        });
+    });
+}
   
   function downloadScreenshot(dataUrl) {
     chrome.downloads.download({
@@ -100,11 +179,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         alert('Error downloading screenshot: ' + chrome.runtime.lastError.message);
       } else {
         chrome.downloads.search({ id: downloadId }, (results) => {
-          if (results && results.length > 0) {
-            alert('Screenshot captured and saved to: ' + results[0].filename);
-          } else {
-            alert('Screenshot captured, but could not retrieve the download path.');
-          }
+        //   if (results && results.length > 0) {
+        //     alert('Screenshot captured and saved to: ' + results[0].filename);
+        //   } else {
+        //     alert('Screenshot captured, but could not retrieve the download path.');
+        //   }
         });
       }
     });
@@ -138,7 +217,7 @@ function parseCustomTimestamp(timestamp,isFringe) {
 }
 
 function sendToBackend() {
-    chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp", "meetingEndTimeStamp", "attendees", "speakers","oauthEmail", "oauthName"], function (result) {
+    chrome.storage.local.get(["userName", "transcript", "chatMessages", "meetingTitle", "meetingStartTimeStamp", "meetingEndTimeStamp", "attendees", "speakers","oauthEmail", "oauthName", "screenshots"], function (result) {
         console.log(result);
         const speakerDuration={};
         
@@ -187,6 +266,7 @@ function sendToBackend() {
                 body: JSON.stringify({
                     blabberEmail: result.oauthEmail,
                     blabberName: result.oauthName,
+                    screenshots: result.screenshots,
                     convenor: result.userName,
                     meetingTitle: result.meetingTitle || "Untitled Meeting",
                     meetingStartTimeStamp: parseCustomTimestamp(result.meetingStartTimeStamp, true) || new Date().toISOString(),
@@ -210,3 +290,9 @@ function sendToBackend() {
     });
 }
   
+
+function clearScreenshots() {
+    chrome.storage.local.remove('screenshots', () => {
+      console.log('Screenshots cleared from storage.');
+    });
+  }
