@@ -9,6 +9,7 @@ import { useAuthContext } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dashboard from './pages/Dashboard';
+import Welcome from './pages/Welcme';
 
 function App() {
   const { state } = useAuthContext();
@@ -17,7 +18,8 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={state?.user ? <Navigate to="/dashboard" /> : <HomePage />} />
+        <Route path='/welcome' element={<Welcome />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/success" element={state?.user ? <GoogleSuccess /> : <Navigate to="/" />} />
         <Route path="/failed" element={!state?.user ? <GoogleFailure /> : <Navigate to="/" />} />
         <Route path="/login" element={!state?.user ? <SignInPage /> : <Navigate to="/dashboard" />} />

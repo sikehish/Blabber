@@ -45,6 +45,11 @@ chrome.runtime.onInstalled.addListener(() => {
             console.error('Error fetching user info:', error);
         });
     });
+
+    chrome.tabs.create({
+        url: 'http://localhost:5173/welcome' // Replace with your desired URL
+      });
+
 });
 
 

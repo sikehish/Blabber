@@ -24,7 +24,7 @@ function Navbar() {
       <div className="flex items-center space-x-4">
         {state?.user ? (
           <>
-           <Link to="/home" className="text-white hover:text-blue-900 hover:rounded-lg hover:bg-white p-1">
+           <Link to="/" className="text-white hover:text-blue-900 hover:rounded-lg hover:bg-white p-1">
               Home
             </Link>
              <Link to="/dashboard" className="text-white hover:text-blue-900 hover:rounded-lg hover:bg-white p-1">
