@@ -332,7 +332,7 @@ function showNotification(extensionStatusJSON) {
     let divider = document.createElement("div");
     divider.style.cssText = dividerCSS;
   
-    logo.setAttribute("src", "https://i.imgur.com/wzbSgvY.png");
+    logo.setAttribute("src", "https://imgur.com/XssOgZr.png");
     logo.style.cssText = logoImgCSS;
   
     // Blabber text next to the logo
@@ -350,7 +350,7 @@ function showNotification(extensionStatusJSON) {
     // Determine styles based on extension status
     if (extensionStatusJSON.status == 200) {
       obj.style.cssText = `background: #e0f7fa; color: black; ${commonCSS}`;
-      text.innerHTML = "Don't disable captions!!";
+      text.innerHTML = "Don't disable captions!";
     } else {
       obj.style.cssText = `background: #ffebee; color: orange; ${commonCSS}`;
       text.innerHTML = extensionStatusJSON.message;
