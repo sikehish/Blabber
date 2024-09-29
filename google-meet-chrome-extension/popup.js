@@ -11,6 +11,11 @@ window.onload = function () {
   )
 }
 
+document.getElementById('view-meetings').addEventListener('click', function () {
+  chrome.tabs.create({ url: 'http://localhost:5173/dashboard' });
+});
+
+
 document.getElementById('screenshot-btn').addEventListener('click', () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript({

@@ -48,6 +48,27 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 
+function downloadScreenshot(dataUrl) {
+    chrome.downloads.download({
+      url: dataUrl,
+      filename: 'screenshot.png',
+      saveAs: false  // Automatically save to the Downloads folder without user prompt
+    }, (downloadId) => {
+      if (chrome.runtime.lastError) {
+        alert('Error downloading screenshot: ' + chrome.runtime.lastError.message);
+      } else {
+        chrome.downloads.search({ id: downloadId }, (results) => {
+        //   if (results && results.length > 0) {
+        //     alert('Screenshot captured and saved to: ' + results[0].filename);
+        //   } else {
+        //     alert('Screenshot captured, but could not retrieve the download path.');
+        //   }
+        });
+      }
+    });
+  }
+
+
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "capture_screenshot") {
@@ -64,6 +85,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 alert('Failed to capture screenshot: ' + (chrome.runtime.lastError?.message || 'Unknown error.'));
                 sendResponse({ success: false }); // Indicate failure
               } else {
+                downloadScreenshot(dataUrl);
                 storeScreenshotUrl(dataUrl); // Store the screenshot URL
                 sendResponse({ success: true }); // Indicate success
               }
@@ -254,7 +276,7 @@ function sendToBackend() {
                     meetingStartTimeStamp: parseCustomTimestamp(result.meetingStartTimeStamp, true) || new Date().toISOString(),
                     meetingEndTimeStamp: parseCustomTimestamp(result.meetingEndTimeStamp,true) || undefined,
                     speakers: speakersArray,
-                    attendees: result.attendees,
+                    attendees: result.attendees.filter(attendee => !(attendee.includes("(Presentation)"))),
                     transcriptData: lines,
                     speakerDuration
                 }),
