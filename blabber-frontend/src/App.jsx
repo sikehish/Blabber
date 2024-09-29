@@ -8,7 +8,7 @@ import Footer from './components/Footer';
 import { useAuthContext } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Dashboard from './pages/dashboard';
+// import Dashboard from './pages/dashboard';
 
 function App() {
   const { state } = useAuthContext();
