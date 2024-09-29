@@ -29,7 +29,7 @@ const calculateDuration = (start, end) => {
 };
 
 const reportTypes = [
-    { value: 'normal', label: 'Report' },
+    { value: 'normal', label: 'General Report' },
     { value: 'speaker_ranking', label: 'Speaker Report' },
     { value: 'sentiment', label: 'Sentiment Report' },
     { value: 'interval', label: 'Interval Based Report' }
@@ -147,47 +147,43 @@ const reportTypes = [
     };
 
     return (
-        <div className="bg-white shadow-lg rounded-xl p-6 m-4 w-full md:w-80 hover:shadow-2xl transition-shadow duration-300">
-            <div className="flex flex-col items-start">
-                <h2 className="text-2xl font-bold text-blue-600 mb-2">{meet.meetingTitle}</h2>
-                <p className="text-sm text-gray-500 mb-4">Hosted by <span className="font-semibold">{meet.convenor}</span></p>
+        <div className="bg-white shadow-lg rounded-xl p-6 m-4 hover:shadow-2xl transition-shadow duration-300">
+            <div className="flex flex-row w-full">
+                <div className="flex flex-col items-start w-full">
+                    <div className='flex flex-col md:flex-row justify-between'>
+                        <div >
+                            <h2 className="text-2xl font-bold text-blue-600 mb-2">{meet.meetingTitle}</h2>
+                            <p className="p-1 text-sm text-gray-500">Hosted by <span className="font-semibold">{meet.convenor}</span></p>
+                        </div>
+                        <div className="mb-2 flex flex-wrap md:w-1/2 md:self-end">
+                            <p className="text-sm p-1"><strong className="mb-1 text-purple-900">From:</strong> {formatTime(meet.meetingStartTimeStamp)}  </p><p className="text-sm p-1"> <strong className="text-blue-700">To:</strong> {formatTime(meet.meetingEndTimeStamp)}</p>
+                        </div>
+                    </div>
 
-                <div className="w-full border-b border-gray-300 mb-4"></div>
+                    <div className="w-full border-b border-gray-300 mb-2"></div>
 
-                <p className="mb-2">
-                    <strong className="text-gray-600">Email:</strong> {meet.blabberEmail}
-                </p>
+                    <p className="w-full">
+                        <p className="flex flex-wrap justify-between w-full">
+                            <p className="text-sm p-1"><strong className="mb-1 text-purple-900">Email:</strong> {meet.blabberEmail} </p><p className="text-sm p-1"> <strong className="text-blue-700">Duration:</strong> {calculateDuration(meet.meetingStartTimeStamp, meet.meetingEndTimeStamp)}</p>
+                        </p>
+                    </p>
 
-                <p className="mb-2">
-                    <strong className="text-gray-600">Start Time:</strong> {formatTime(meet.meetingStartTimeStamp)}
-                </p>
+                    <div className="w-full border-b border-gray-300 mb-2"></div>
 
-                <p className="mb-2">
-                    <strong className="text-gray-600">End Time:</strong> {formatTime(meet.meetingEndTimeStamp)}
-                </p>
-
-                <p className="mb-4">
-                    <strong className="text-gray-600">Duration:</strong> {calculateDuration(meet.meetingStartTimeStamp, meet.meetingEndTimeStamp)}
-                </p>
-
-                <div className="w-full border-b border-gray-300 mb-4"></div>
-
-                <p className="mb-2">
-                    <strong className="text-gray-600">Speakers:</strong> {meet.speakers.length > 0 ? meet.speakers.join(', ') : 'No speakers'}
-                </p>
-
-                <p className="mb-2">
-                    <strong className="text-gray-600">Attendees:</strong> {meet.attendees.length > 0 ? meet.attendees.join(', ') : 'No attendees'}
-                </p>
+                    <p className="w-full">
+                        <p className="mb-2 flex flex-wrap justify-between w-full">
+                            <p className="text-sm p-1"><strong className="text-gray-600">Speakers:</strong> {meet.speakers.length > 0 ? meet.speakers.join(', ') : 'No speakers'} </p>
+                            <p className="text-sm p-1"><strong className="text-gray-600">Attendees:</strong> {meet.attendees.length > 0 ? meet.attendees.join(', ') : 'No attendees'}</p>
+                        </p>
+                    </p>
+                <button
+                    onClick={openModal}
+                    className="mt-1 bg-purple-700 text-white px-4 py-2 self-end rounded hover:bg-purple-900"
+                >
+                    Generate Report
+                </button>
+                </div>
             </div>
-
-            <button
-                onClick={openModal}
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-                Generate Report
-            </button>
-
             {/* Modal for Report Generation */}
             <Modal
     isOpen={isModalOpen}
@@ -211,7 +207,7 @@ const reportTypes = [
 
         {/* Report Type Dropdown */}
         <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Report Type:</label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Type of Report:</label>
             <select
                 value={reportType}
                 onChange={(e) => {
@@ -244,7 +240,7 @@ const reportTypes = [
 
         {/* Report Format Dropdown */}
         <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Report Format:</label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Choose a Format:</label>
             <select
                 value={reportFormat}
                 onChange={(e) => setReportFormat(e.target.value)}
@@ -262,7 +258,7 @@ const reportTypes = [
 
         {/* Email Input Field */}
         <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Email Addresses:</label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Send to these Email Addresses:</label>
             <div className="flex flex-col">
                 {emails.map((email, index) => (
                     <div key={index} className="flex items-center mb-2">
@@ -277,7 +273,7 @@ const reportTypes = [
                         <button
                             type="button"
                             onClick={() => removeEmail(index)}
-                            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                            className="px-2 py-1 bg-red-700 text-white rounded hover:bg-red-900"
                         >
                             Remove
                         </button>
@@ -286,9 +282,9 @@ const reportTypes = [
                 <button
                     type="button"
                     onClick={addEmail}
-                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    className="mt-2 px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-900"
                 >
-                    Add Another Email
+                    + Add Another Email
                 </button>
             </div>
         </div>
@@ -307,7 +303,7 @@ const reportTypes = [
             </button>
             <button
                 type="submit"
-                className={`px-4 py-2 bg-blue-500 text-white rounded ${loading ? 'opacity-50' : 'hover:bg-blue-600'}`}
+                className={`px-4 py-2 bg-purple-700 text-white rounded ${loading ? 'opacity-50' : 'hover:bg-purple-900'}`}
                 disabled={loading}
             >
                 {loading ? 'Generating...' : 'Generate Report'}

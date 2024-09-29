@@ -34,8 +34,7 @@ const Dashboard = () => {
   return (
     <div className="relative"> {/* Wrap content in a relative div for positioning */}
       <div className="flex flex-col items-center p-6">
-        <h1 className="text-2xl font-bold mb-4">Meet Dashboard</h1>
-
+        <h1 className="text-4xl font-bold mb-4">Your Meetings</h1>
         {loading && (
           <div className="text-lg text-gray-500">Loading meets...</div>
         )}
