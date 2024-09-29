@@ -48,26 +48,30 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-   if (message.action === 'captureScreenshot') {
-        chrome.tabs.captureVisibleTab(null, {format: "png"}, function(dataUrl) {
-            if (chrome.runtime.lastError) {
-                console.error("Error capturing screenshot:", chrome.runtime.lastError);
-                sendResponse({ error: chrome.runtime.lastError.message });
-                return;
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "capture_screenshot") {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const currentTab = tabs[0];
+  
+        // Check if the current tab's URL matches Google Meet
+        if (currentTab.url.includes("https://meet.google.com")) {
+          chrome.tabs.captureVisibleTab(null, { format: 'png' }, (dataUrl) => {
+            if (chrome.runtime.lastError || !dataUrl) {
+              alert('Failed to capture screenshot: ' + (chrome.runtime.lastError?.message || 'Unknown error.'));
+              sendResponse({ success: false }); // Indicate failure
+            } else {
+              downloadScreenshot(dataUrl);
+              sendResponse({ success: true }); // Indicate success
             }
-
-            // Assuming you want to upload the screenshot
-            // Call your upload function here if needed
-            // For example, you might call uploadScreenshot(dataUrl);
-
-            // Send the captured screenshot URL back to the content script
-            sendResponse({ screenshotUrl: dataUrl });
-        });
-
-        // Return true to indicate that you want to send a response asynchronously
-        return true;
+          });
+          return true; // Keep the messaging channel open for asynchronous response
+        } else {
+          sendResponse({ success: false }); // Not a Google Meet page
+        }
+      });
     }
+
 
     if (message.type == "new_meeting_started") {
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -84,9 +88,29 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         sendToBackend()
     }
     return true
-})
+  });
+  
+  function downloadScreenshot(dataUrl) {
+    chrome.downloads.download({
+      url: dataUrl,
+      filename: 'screenshot.png',
+      saveAs: false  // Automatically save to the Downloads folder without user prompt
+    }, (downloadId) => {
+      if (chrome.runtime.lastError) {
+        alert('Error downloading screenshot: ' + chrome.runtime.lastError.message);
+      } else {
+        chrome.downloads.search({ id: downloadId }, (results) => {
+          if (results && results.length > 0) {
+            alert('Screenshot captured and saved to: ' + results[0].filename);
+          } else {
+            alert('Screenshot captured, but could not retrieve the download path.');
+          }
+        });
+      }
+    });
+  }
 
-chrome.tabs.onRemoved.addListener(function (tabid) {
+  chrome.tabs.onRemoved.addListener(function (tabid) {
     chrome.storage.local.get(["meetingTabId"], function (data) {
         if (tabid == data.meetingTabId) {
             console.log("Successfully intercepted tab close")
@@ -185,4 +209,4 @@ function sendToBackend() {
         }
     });
 }
-
+  

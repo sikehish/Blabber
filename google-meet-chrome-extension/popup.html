@@ -59,6 +59,18 @@
       font-style: italic;
       margin-top: 0;
     }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
   </style>
 </head>
 
@@ -70,6 +82,7 @@
     <div class="signed-in-only">
       <p class="details all-set">You're all set!</p>
     <a href="#" class="view-previous">View Previous Meetings</a>
+    <button id="screenshot-btn">Capture</button>
     </div>
   </div>
   <script src="popup.js"></script>
