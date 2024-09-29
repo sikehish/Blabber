@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import matplotlib
 import matplotlib.pyplot as plt
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem,Image
@@ -13,6 +14,7 @@ import docx
 from docx.shared import Inches
 import re
 from collections import Counter
+matplotlib.use('Agg')  # Use non-GUI backend
 
 # Function to categorize sentiment based on polarity score
 def categorize_sentiment(polarity):
@@ -86,7 +88,7 @@ def create_report_with_interval_sections(meeting_data, interval_minutes):
         # Filter transcript data for the current interval
         interval_transcript_data = [
             entry for entry in meeting_data['transcriptData']
-            if current_time <= datetime.fromisoformat(entry['timestamp'].replace("Z", "+00:00")) < interval_end_time
+            if current_time <= datetime.fromisoformat(entry['timeStamp'].replace("Z", "+00:00")) < interval_end_time
         ]
         
         if interval_transcript_data:
@@ -328,7 +330,7 @@ def create_speaker_ranking_report_pdf(meeting_data):
     for entry in meeting_data['transcriptData']:
         speaker_name = entry['name']
         content = entry['content']
-        timestamp = datetime.fromisoformat(entry['timestamp'].replace("Z", "+00:00"))
+        timestamp = datetime.fromisoformat(entry['timeStamp'].replace("Z", "+00:00"))
 
         if speaker_name not in speaker_data:
             speaker_data[speaker_name] = {
@@ -494,7 +496,7 @@ def create_report_with_interval_sections_docx(meeting_data, interval_minutes):
         # Filter transcript data for the current interval
         interval_transcript_data = [
             entry for entry in meeting_data['transcriptData']
-            if current_time <= datetime.fromisoformat(entry['timestamp'].replace("Z", "+00:00")) < interval_end_time
+            if current_time <= datetime.fromisoformat(entry['timeStamp'].replace("Z", "+00:00")) < interval_end_time
         ]
 
         if interval_transcript_data:
@@ -619,11 +621,11 @@ if __name__ == "__main__":
     'meetingEndTimeStamp': '2024-09-28T11:30:00.000Z',
     'attendees': ['Alice', 'Bob', 'Charlie'],
     'transcriptData': [
-        {'name': 'Alice', 'content': 'Hello everyone! How are you?', 'timestamp': '2024-09-28T10:05:00.000Z'},
-        {'name': 'Bob', 'content': 'I am fine, thanks!', 'timestamp': '2024-09-28T10:10:00.000Z'},
-        {'name': 'Charlie', 'content': 'Good morning, team!', 'timestamp': '2024-09-28T10:20:00.000Z'},
-        {'name': 'Alice', 'content': 'Let’s discuss the project update.', 'timestamp': '2024-09-28T10:30:00.000Z'},
-        {'name': 'Bob', 'content': 'We have completed the first phase.', 'timestamp': '2024-09-28T10:50:00.000Z'}
+        {'name': 'Alice', 'content': 'Hello everyone! How are you?', 'timeStamp': '2024-09-28T10:05:00.000Z'},
+        {'name': 'Bob', 'content': 'I am fine, thanks!', 'timeStamp': '2024-09-28T10:10:00.000Z'},
+        {'name': 'Charlie', 'content': 'Good morning, team!', 'timeStamp': '2024-09-28T10:20:00.000Z'},
+        {'name': 'Alice', 'content': 'Let’s discuss the project update.', 'timeStamp': '2024-09-28T10:30:00.000Z'},
+        {'name': 'Bob', 'content': 'We have completed the first phase.', 'timeStamp': '2024-09-28T10:50:00.000Z'}
     ],
     'speakerDuration': {
         'Alice': 10,

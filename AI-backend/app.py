@@ -10,7 +10,7 @@ app = Flask(__name__)
 def get_report():
     '''Expecting: {
         "meeting_data": {},
-        "report_type": "normal"/"speaker_ranking"/"sentiment/"interval",
+        "report_type": "normal"/"speaker_ranking"/"sentiment"/"interval",
         "report_format": "pdf"/"docx"
     }'''
     receieved_data = request.json
@@ -22,7 +22,9 @@ def get_report():
     meeting_data = receieved_data['meeting_data']
     report_type = receieved_data['report_type']
     report_format = receieved_data['report_format']
-    report_interval = receieved_data['interval']
+
+    if 'report_interval' in receieved_data:
+        report_interval = receieved_data['report_interval']
 
     # Validate meeting_data
     if not meeting_data:

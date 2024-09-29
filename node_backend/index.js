@@ -260,7 +260,7 @@ app.post('/api/upload-screenshot', (req, res) => {
 });
 
 app.post('/api/get-report', async (req, res) => {
-  const { meeting_id, report_format, report_type } = req.body;
+  const { meeting_id, report_format, report_type, report_interval } = req.body;
 
   // Find the meet based on the meeting_id
   const meet = await Meet.findById(meeting_id);
@@ -273,11 +273,10 @@ app.post('/api/get-report', async (req, res) => {
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify({meeting_data:meet, report_format, report_type})
+          body: JSON.stringify({meeting_data:meet, report_format, report_type, report_interval})
       }).then(async (response) => {
         try {
             if (response.ok) {
-              console.log(response)
               res.setHeader('Content-Disposition', response.headers.get('content-disposition'));
               res.setHeader('Content-Type', response.headers.get('content-type'));
               // Convert the fetch response.body (ReadableStream) into a Node.js Readable stream
