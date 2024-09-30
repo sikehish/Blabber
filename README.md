@@ -4,12 +4,6 @@
 
 Blabber is an AI-powered Chrome extension designed to streamline meeting management and documentation. It simplifies the process of capturing, organizing, and sharing meeting data with key stakeholders. Blabber ensures that no critical information is missed during meetings, offering seamless solutions for transcription, report generation, and sharing.
 
-<div style="display: flex; align-items: center;">
-    <img src="https://github.com/user-attachments/assets/ee0abb74-9fb7-4855-8030-06d2ba2dcdae" alt="Blabber Icon" width="250" />
-    <img src="https://i.imgur.com/pgOwCjJ.png" alt="Second Image" width="100" style="margin-left: 10px;" />
-    <img src="https://i.imgur.com/TIT9zq8.png" alt="Third Image" width="100" style="margin-left: 10px;" />
-</div>
-
 ---
  
 ## Key Features
