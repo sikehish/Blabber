@@ -88,7 +88,7 @@ def create_report_with_interval_sections_pdf(meeting_data, interval_minutes):
         # Filter transcript data for the current interval
         interval_transcript_data = [
             entry for entry in meeting_data['transcriptData']
-            if current_time <= datetime.fromisoformat(entry['timestamp'].replace("Z", "+00:00")) < interval_end_time
+            if current_time <= datetime.fromisoformat(entry['timeStamp'].replace("Z", "+00:00")) < interval_end_time
         ]
         
         if interval_transcript_data:
@@ -150,7 +150,7 @@ def create_report_with_interval_sections_docx(meeting_data, interval_minutes):
         # Filter transcript data for the current interval
         interval_transcript_data = [
             entry for entry in meeting_data['transcriptData']
-            if current_time <= datetime.fromisoformat(entry['timestamp'].replace("Z", "+00:00")) < interval_end_time
+            if current_time <= datetime.fromisoformat(entry['timeStamp'].replace("Z", "+00:00")) < interval_end_time
         ]
 
         if interval_transcript_data:
@@ -702,39 +702,39 @@ if __name__ == "__main__":
         'meetingEndTimeStamp': '2024-09-29T12:26:09.000Z',
         'attendees': ['Prateek', 'TitaNyte Official'],
         'transcriptData': [
-            {'name': 'TitaNyte Official', 'content': 'Hi, how are you?', 'timestamp': '2024-09-29T12:21:37.000Z'},
-            {'name': 'Prateek', 'content': "Hi, I'm fine. So what's going to be the agenda of today's discussion", 'timestamp': '2024-09-29T12:21:38.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'So now, we\'ll be focusing.', 'timestamp': '2024-09-29T12:21:43.000Z'},
-            {'name': 'Prateek', 'content': 'I say, Let\'s discuss about the features that are extension, is going to give to the users, okay? So the first and foremost, is that it will give the transcriptions, Which it will basically. Web script actually it will just scrape it from the captions.', 'timestamp': '2024-09-29T12:21:45.000Z'},
-            {'name': 'Prateek', 'content': 'Google Meet is generating. And what will happen afterwards. Once that transcripts are there in the database, can you please tell me?', 'timestamp': '2024-09-29T12:22:03.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Sure. so once US transcripts are stored in the database, They?', 'timestamp': '2024-09-29T12:22:12.000Z'},
-            {'name': 'Prateek', 'content': "It's okay, it's okay. You can continue", 'timestamp': '2024-09-29T12:22:21.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Okay, so once the transit are stored So once the transit are stored in the database, what you\'re doing is we then have an ML model or basically AI model, right? A generative AI model which basically takes these transcripts and then tries to create reports BAS', 'timestamp': '2024-09-29T12:22:24.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'filters that we are working on, right? So the filters that we so far, basically, it includes speaker based reporting, right? It includes interval-based reporting. And a host of other features. so, this training part happens when you click on Generate,', 'timestamp': '2024-09-29T12:22:40.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'front end, right? So you have an extension, you have a front end and on the front end you log in using Google, Right? So this is how it works. And so as soon as you click on Generate button, there\'ll be a model that pop up, right? And on the model, you', 'timestamp': '2024-09-29T12:23:02.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'You can enter the meeting title, you can enter the the kind of report that you want whether you want to talk X format or P or PDF format right and basically the format stuff, right? So with formatting want and then the title and then the option and then', 'timestamp': '2024-09-29T12:23:22.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'add Prompts as well, which would enhance the report creation. So that is something that\'s on the cards. Apart from that in the extension, you can also take screenshots, right? Which makes it easy to keep track of what had been shared during the meeting.', 'timestamp': '2024-09-29T12:23:42.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'So let me try taking a screenshot now. Let\'s see if it works, and let\'s see if it works here. I think we\'ve grabbed a screenshot we need to check we\'ll check that later. So yeah that\'s how we take a So yeah that\'s how we take a screenshot basically you clear?', 'timestamp': '2024-09-29T12:23:59.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Basically you go to the Extension, you click on the extension, and then you click on the Capture button there. So nice work, I like the user interface that you\'ve created for the extension.', 'timestamp': '2024-09-29T12:24:17.000Z'},
-            {'name': 'Prateek', 'content': 'Okay, so now I will be covering like how anyone can use our extension. Like, by through our repo First, they\'ll have to clone the repository. Then they will have to install all the packages. And after I know, it is already available on the Chrome store.', 'timestamp': '2024-09-29T12:24:30.000Z'},
-            {'name': 'Prateek', 'content': 'still, if they want to run it on there, let\'s say, that\'s if they want to run it on their own device, then they will have to clone that apple. This is what I\'m going to add in the Readme, so please correct me if I\'m So please correct me if I\'m going wrong. Some', 'timestamp': '2024-09-29T12:24:50.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Okay.', 'timestamp': '2024-09-29T12:25:01.000Z'},
-            {'name': 'Prateek', 'content': 'And they will have to do the NPM install for both front end and backend and PIP install for the AI backend. Okay, and afterwards, they will have to set the environment variables, which we, which we will give it to them, just until the judgment has been', 'timestamp': '2024-09-29T12:25:02.000Z'},
-            {'name': 'Prateek', 'content': 'after then we\'ll remove that remove it. So yeah that\'s it after then they will be just able to run it. run.', 'timestamp': '2024-09-29T12:25:17.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Okay.', 'timestamp': '2024-09-29T12:25:27.000Z'},
-            {'name': 'Prateek', 'content': 'What is it? Is it is there something which I\'m missing?', 'timestamp': '2024-09-29T12:25:27.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Yeah, I think the few more things, I mean, you also have to set up the Python directory that', 'timestamp': '2024-09-29T12:25:31.000Z'},
-            {'name': 'Prateek', 'content': 'Okay.', 'timestamp': '2024-09-29T12:25:37.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'add all the step instructions. I think you mentioned that, right?', 'timestamp': '2024-09-29T12:25:42.000Z'},
-            {'name': 'Prateek', 'content': 'Yeah.', 'timestamp': '2024-09-29T12:25:41.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Yeah, but then we also need to provide requirements or TC, which would be there. But apart from that, you also have to, you also have to add dot Env. Dot Emmy file, basically an example file, which shows in the format. shows in Right. So I think that\'s', 'timestamp': '2024-09-29T12:25:42.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'I think we\'re good to go, right?', 'timestamp': '2024-09-29T12:25:59.000Z'},
-            {'name': 'Prateek', 'content': 'Yeah, we are good to go.', 'timestamp': '2024-09-29T12:26:02.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'so, I think', 'timestamp': '2024-09-29T12:26:03.000Z'},
-            {'name': 'Prateek', 'content': 'Thank you.', 'timestamp': '2024-09-29T12:26:04.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Yeah, thank you have', 'timestamp': '2024-09-29T12:26:05.000Z'},
-            {'name': 'Prateek', 'content': 'Yeah.', 'timestamp': '2024-09-29T12:26:06.000Z'},
-            {'name': 'TitaNyte Official', 'content': 'Thank you have a nice day.', 'timestamp': '2024-09-29T12:26:06.000Z'}
+            {'name': 'TitaNyte Official', 'content': 'Hi, how are you?', 'timeStamp': '2024-09-29T12:21:37.000Z'},
+            {'name': 'Prateek', 'content': "Hi, I'm fine. So what's going to be the agenda of today's discussion", 'timeStamp': '2024-09-29T12:21:38.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'So now, we\'ll be focusing.', 'timeStamp': '2024-09-29T12:21:43.000Z'},
+            {'name': 'Prateek', 'content': 'I say, Let\'s discuss about the features that are extension, is going to give to the users, okay? So the first and foremost, is that it will give the transcriptions, Which it will basically. Web script actually it will just scrape it from the captions.', 'timeStamp': '2024-09-29T12:21:45.000Z'},
+            {'name': 'Prateek', 'content': 'Google Meet is generating. And what will happen afterwards. Once that transcripts are there in the database, can you please tell me?', 'timeStamp': '2024-09-29T12:22:03.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Sure. so once US transcripts are stored in the database, They?', 'timeStamp': '2024-09-29T12:22:12.000Z'},
+            {'name': 'Prateek', 'content': "It's okay, it's okay. You can continue", 'timeStamp': '2024-09-29T12:22:21.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Okay, so once the transit are stored So once the transit are stored in the database, what you\'re doing is we then have an ML model or basically AI model, right? A generative AI model which basically takes these transcripts and then tries to create reports BAS', 'timeStamp': '2024-09-29T12:22:24.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'filters that we are working on, right? So the filters that we so far, basically, it includes speaker based reporting, right? It includes interval-based reporting. And a host of other features. so, this training part happens when you click on Generate,', 'timeStamp': '2024-09-29T12:22:40.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'front end, right? So you have an extension, you have a front end and on the front end you log in using Google, Right? So this is how it works. And so as soon as you click on Generate button, there\'ll be a model that pop up, right? And on the model, you', 'timeStamp': '2024-09-29T12:23:02.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'You can enter the meeting title, you can enter the the kind of report that you want whether you want to talk X format or P or PDF format right and basically the format stuff, right? So with formatting want and then the title and then the option and then', 'timeStamp': '2024-09-29T12:23:22.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'add Prompts as well, which would enhance the report creation. So that is something that\'s on the cards. Apart from that in the extension, you can also take screenshots, right? Which makes it easy to keep track of what had been shared during the meeting.', 'timeStamp': '2024-09-29T12:23:42.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'So let me try taking a screenshot now. Let\'s see if it works, and let\'s see if it works here. I think we\'ve grabbed a screenshot we need to check we\'ll check that later. So yeah that\'s how we take a So yeah that\'s how we take a screenshot basically you clear?', 'timeStamp': '2024-09-29T12:23:59.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Basically you go to the Extension, you click on the extension, and then you click on the Capture button there. So nice work, I like the user interface that you\'ve created for the extension.', 'timeStamp': '2024-09-29T12:24:17.000Z'},
+            {'name': 'Prateek', 'content': 'Okay, so now I will be covering like how anyone can use our extension. Like, by through our repo First, they\'ll have to clone the repository. Then they will have to install all the packages. And after I know, it is already available on the Chrome store.', 'timeStamp': '2024-09-29T12:24:30.000Z'},
+            {'name': 'Prateek', 'content': 'still, if they want to run it on there, let\'s say, that\'s if they want to run it on their own device, then they will have to clone that apple. This is what I\'m going to add in the Readme, so please correct me if I\'m So please correct me if I\'m going wrong. Some', 'timeStamp': '2024-09-29T12:24:50.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Okay.', 'timeStamp': '2024-09-29T12:25:01.000Z'},
+            {'name': 'Prateek', 'content': 'And they will have to do the NPM install for both front end and backend and PIP install for the AI backend. Okay, and afterwards, they will have to set the environment variables, which we, which we will give it to them, just until the judgment has been', 'timeStamp': '2024-09-29T12:25:02.000Z'},
+            {'name': 'Prateek', 'content': 'after then we\'ll remove that remove it. So yeah that\'s it after then they will be just able to run it. run.', 'timeStamp': '2024-09-29T12:25:17.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Okay.', 'timeStamp': '2024-09-29T12:25:27.000Z'},
+            {'name': 'Prateek', 'content': 'What is it? Is it is there something which I\'m missing?', 'timeStamp': '2024-09-29T12:25:27.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Yeah, I think the few more things, I mean, you also have to set up the Python directory that', 'timeStamp': '2024-09-29T12:25:31.000Z'},
+            {'name': 'Prateek', 'content': 'Okay.', 'timeStamp': '2024-09-29T12:25:37.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'add all the step instructions. I think you mentioned that, right?', 'timeStamp': '2024-09-29T12:25:42.000Z'},
+            {'name': 'Prateek', 'content': 'Yeah.', 'timeStamp': '2024-09-29T12:25:41.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Yeah, but then we also need to provide requirements or TC, which would be there. But apart from that, you also have to, you also have to add dot Env. Dot Emmy file, basically an example file, which shows in the format. shows in Right. So I think that\'s', 'timeStamp': '2024-09-29T12:25:42.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'I think we\'re good to go, right?', 'timeStamp': '2024-09-29T12:25:59.000Z'},
+            {'name': 'Prateek', 'content': 'Yeah, we are good to go.', 'timeStamp': '2024-09-29T12:26:02.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'so, I think', 'timeStamp': '2024-09-29T12:26:03.000Z'},
+            {'name': 'Prateek', 'content': 'Thank you.', 'timeStamp': '2024-09-29T12:26:04.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Yeah, thank you have', 'timeStamp': '2024-09-29T12:26:05.000Z'},
+            {'name': 'Prateek', 'content': 'Yeah.', 'timeStamp': '2024-09-29T12:26:06.000Z'},
+            {'name': 'TitaNyte Official', 'content': 'Thank you have a nice day.', 'timeStamp': '2024-09-29T12:26:06.000Z'}
         ],
         'speakerDuration': {
             'TitaNyte Official': 163,
