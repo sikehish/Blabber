@@ -7,6 +7,7 @@ Blabber is an AI-powered Chrome extension designed to streamline meeting managem
 <div style="display: flex; align-items: center;">
     <img src="https://github.com/user-attachments/assets/ee0abb74-9fb7-4855-8030-06d2ba2dcdae" alt="Blabber Icon" width="250" />
     <img src="https://i.imgur.com/pgOwCjJ.png" alt="Second Image" width="100" style="margin-left: 10px;" />
+    <p>for</p>
     <img src="https://i.imgur.com/TIT9zq8.png" alt="Third Image" width="100" style="margin-left: 10px;" />
 </div>
 
