@@ -2,11 +2,11 @@
 
 > Built at ScrollHacks 2024
 
-Blabber is a tool that helps you generate custom meeting recaps, reports, and transcripts using AI.
+Blabber is an AI-powered Chrome extension designed to streamline meeting management and documentation.
 
-You can use it to generate meeting recaps, reports, and transcripts for your meetings, interviews, and other conversations.
+It simplifies the process of capturing, organizing, and sharing meeting data with key stakeholders. Blabber helps ensure that no critical information is missed during meetings, offering seamless solutions for transcription, report generation, and sharing.
 
-## Features
+## Key Features
 
 - Generate meeting recaps, reports, and transcripts using AI.
 - Generate meeting recaps and reports for set intervals and custom intervals.
