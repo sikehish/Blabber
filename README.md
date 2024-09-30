@@ -204,9 +204,14 @@ This directory contains the Chrome extension that integrates Blabber with Google
 
 # Screenshots
 
-![Alt text](https://i.imgur.com/oUBrtxz.jpeg)
-
-
+![Homepage](https://i.imgur.com/oUBrtxz.jpeg)
+![Features](https://i.imgur.com/tbkvwBS.jpeg)
+![Features](https://i.imgur.com/IthUbx6.jpeg)
+![Features](https://i.imgur.com/SUL2nI7.jpeg)
+![Google meet example](https://i.imgur.com/WNS2JpM.jpeg)
+![Extension UI to capture screenshots or view previous meet transcripts](https://i.imgur.com/OKO6jAc.jpeg)
+![Website UI to generate reports for previous meets](https://i.imgur.com/riwQzD5.jpeg)
+![Getting report on email - example](https://i.imgur.com/YWF9LQv.jpeg)
 
 ---
 
