@@ -204,6 +204,8 @@ This directory contains the Chrome extension that integrates Blabber with Google
 
 # Screenshots
 
+![Alt text](https://i.imgur.com/oUBrtxz.jpeg)
+
 
 
 ---
