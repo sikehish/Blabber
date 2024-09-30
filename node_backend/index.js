@@ -107,12 +107,16 @@ mongoose.connect(MONGO_URI, {
         const reportBuffer = Buffer.from(await response.arrayBuffer());  
           // Prepare email transporter
           const transporter = nodemailer.createTransport({
-            service: 'gmail', // Use your email service
+            host: 'smtp.gmail.com',
+            port: 587,
+            ignoreTLS: false,
+            secure: false,
             auth: {
-              user: process.env.EMAIL_USER, // Sender email
-              pass: process.env.EMAIL_PASS, // Email password
-            },
-          });
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+            });
+            
   
           // Send email with the report
           await transporter.sendMail({
@@ -355,12 +359,15 @@ app.post('/api/get-report', checkAuth, async (req, res) => {
 
                   // Prepare email transporter
                   const transporter = nodemailer.createTransport({
-                      service: 'gmail', // or any other email service
-                      auth: {
-                          user: process.env.EMAIL_USER, // Your email
-                          pass: process.env.EMAIL_PASS, // Your email password
-                      },
-                  });
+                    host: 'smtp.gmail.com',
+                    port: 587,
+                    ignoreTLS: false,
+                    secure: false,
+                    auth: {
+                        user: process.env.EMAIL_USER,
+                        pass: process.env.EMAIL_PASS
+                    }
+                    });
 
                   // Send email to each valid email address
                   for (const email of validEmails) {
