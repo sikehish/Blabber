@@ -18,10 +18,18 @@ Blabber is an AI-powered Chrome extension designed to streamline meeting managem
 
 ## What is the core concept or problem this project aims to solve?
 
-- A lot of time is wasted in writing meeting recaps, reports, and transcripts manually.
-- Many points are missed in the overall grand scheme of things in meetings.
-- It is difficult to keep track of all the important points in a meeting.
-- It is difficult to generate meeting recaps, reports, and transcripts for large meetings.
+Meetings often result in miscommunication, missed details, and inefficient post-meeting workflows. Here are the key problems that Blabber addresses:
+
+- **Time-consuming manual transcription**: Writing meeting recaps, reports, and transcripts manually is time-intensive and prone to errors.
+  
+- **Missed critical points**: Important details are often overlooked or forgotten, especially in long or fast-paced meetings.
+
+- **Lack of real-time insights**: Manually tracking speaker contributions, emotional tone, and key discussion points is challenging and inefficient.
+
+- **Difficulty in large meetings**: Generating comprehensive recaps and transcripts for larger meetings, involving many attendees and speakers, can be overwhelming and prone to omissions.
+
+Blabber solves these issues by automating transcription, report generation, and providing tools like sentiment analysis and screenshot capture to ensure that no critical information is missed and that meetings are documented efficiently and accurately.
+
 
 ## Overview of the Team
 
