@@ -4,7 +4,7 @@
 
 Blabber is an AI-powered Chrome extension designed to streamline meeting management and documentation. It simplifies the process of capturing, organizing, and sharing meeting data with key stakeholders. Blabber ensures that no critical information is missed during meetings, offering seamless solutions for transcription, report generation, and sharing.
 
-![image](https://github.com/user-attachments/assets/ee0abb74-9fb7-4855-8030-06d2ba2dcdae)
+<img src="https://github.com/user-attachments/assets/ee0abb74-9fb7-4855-8030-06d2ba2dcdae" alt="Blabber Icon" width="100" />
 
 ---
  
@@ -56,7 +56,6 @@ Check out the demo video to see Blabber in action: [Watch Demo Video](https://ww
 - blabber architecture.png – Architecture diagram for Blabber.
 - README.md – Setup guide and project documentation.
 
----
 
 ## 1. AI-backend (Python - Flask)
 
@@ -97,7 +96,6 @@ The AI-backend is responsible for handling AI-related tasks (e.g., generating re
    
   The Flask server will now be running locally at http://localhost:8000 (or another port if configured).
 
----
 
 ## 2. node_backend (Node.js - Express)
 
@@ -143,7 +141,6 @@ This is the Node.js backend that handles API requests and integrates with other 
    
   The backend server will now be running locally at http://localhost:3000 (or another port if configured).
 
----
 
 ## 3. blabber-frontend (React - Vite)
 
@@ -167,7 +164,6 @@ This is the frontend for the Blabber application, built using React and Vite for
    
   The frontend will now be available locally at http://localhost:5173.
 
----
 
 ## 4. google-meet-chrome-extension
 
@@ -187,7 +183,6 @@ This directory contains the Chrome extension that integrates Blabber with Google
 
 **For more detailed instructions on loading unpacked extensions, you can refer to [this blog post](https://webkul.com/blog/how-to-install-the-unpacked-extension-in-chrome/).**
 
----
 
 ### Additional Notes:
 
