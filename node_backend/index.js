@@ -378,8 +378,8 @@ app.post('/api/get-report', checkAuth, async (req, res) => {
                           text: 'Please find the attached report.', // Plain text body
                           attachments: [
                               {
-                                  filename: 'report.pdf', // Adjust the filename as necessary
-                                  content: reportData, // Attach the report buffer
+                                  filename: `report.${report_format}`, 
+                                  content: reportData,
                               },
                           ],
                       });
