@@ -1,16 +1,20 @@
-# Blabber - Custom Meeting Recaps, Reports, and Transcripts using AI
+# Blabber - AI-Powered Meeting Management and Reporting
 
 > Built at ScrollHacks 2024
 
-Blabber is an AI-powered Chrome extension designed to streamline meeting management and documentation.
-
-It simplifies the process of capturing, organizing, and sharing meeting data with key stakeholders. Blabber helps ensure that no critical information is missed during meetings, offering seamless solutions for transcription, report generation, and sharing.
+Blabber is an AI-powered Chrome extension designed to streamline meeting management and documentation. It simplifies the process of capturing, organizing, and sharing meeting data with key stakeholders. Blabber ensures that no critical information is missed during meetings, offering seamless solutions for transcription, report generation, and sharing.
 
 ## Key Features
 
-- **Real-Time Transcription:** Blabber integrates with advanced speech-to-text APIs to deliver accurate real-time meeting transcripts, capturing every detail of your discussion.
-- Generate meeting recaps and reports for set intervals and custom intervals.
-- Also recaps chat text messages.
+- **Real-Time Transcription**: Blabber uses advanced speech-to-text APIs for accurate, real-time transcription, capturing every aspect of your meetings.
+- **Comprehensive Report Generation**: Create customizable reports in PDF and DOCX formats with options such as:
+  - 📊 **Speaker-Based Reports**: Focus on individual speakers and their contributions.
+  - ⏱ **Interval-Based Reports**: Review discussions broken down by time intervals.
+  - 💬 **Sentiment-Based Reports**: Get insights into the emotional tone of the meeting.
+  - 🗒 **General Reports**: A holistic overview of all meeting details.
+- **Email Integration**: Automatically email generated reports to all attendees, ensuring everyone stays informed.
+- **Screenshot Capture**: Capture important moments in meetings using a simple keyboard shortcut. Screenshots are linked to transcripts and can be annotated for better clarity.
+- **Sentiment Analysis**: Using Natural Language Processing (NLP), Blabber provides insights into the emotional tone of the conversation, helping teams understand the mood of discussions.
 
 ## What is the core concept or problem this project aims to solve?
 
