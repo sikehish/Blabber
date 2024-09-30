@@ -8,7 +8,7 @@ It simplifies the process of capturing, organizing, and sharing meeting data wit
 
 ## Key Features
 
-- Generate meeting recaps, reports, and transcripts using AI.
+- *Real-Time Transcription:* Blabber integrates with advanced speech-to-text APIs to deliver accurate real-time meeting transcripts, capturing every detail of your discussion.
 - Generate meeting recaps and reports for set intervals and custom intervals.
 - Also recaps chat text messages.
 
