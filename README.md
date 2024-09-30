@@ -173,6 +173,8 @@ This directory contains the Chrome extension that integrates Blabber with Google
 
 5. *If any changes are made to the extension code, reload it by clicking the reload icon next to the extension in the chrome://extensions/ page*.
 
+**For more detailed instructions on loading unpacked extensions, you can refer to [this blog post](https://webkul.com/blog/how-to-install-the-unpacked-extension-in-chrome/).**
+
 ---
 
 ### Additional Notes:
