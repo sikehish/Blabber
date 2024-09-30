@@ -6,6 +6,7 @@ Blabber is an AI-powered Chrome extension designed to streamline meeting managem
 
 ![image](https://github.com/user-attachments/assets/ee0abb74-9fb7-4855-8030-06d2ba2dcdae)
 
+---
  
 ## Key Features
 
@@ -18,6 +19,8 @@ Blabber is an AI-powered Chrome extension designed to streamline meeting managem
 - **Email Integration**: Automatically email generated reports to all attendees, ensuring everyone stays informed.
 - **Screenshot Capture**: Capture important moments in meetings using a simple keyboard shortcut. Screenshots are linked to transcripts and can be annotated for better clarity.
 - **Sentiment Analysis**: Using Natural Language Processing (NLP), Blabber provides insights into the emotional tone of the conversation, helping teams understand the mood of discussions.
+
+---
 
 ## What is the core concept or problem this project aims to solve?
 
@@ -32,6 +35,12 @@ Meetings often result in miscommunication, missed details, and inefficient post-
 - **Difficulty in large meetings**: Generating comprehensive recaps and transcripts for larger meetings, involving many attendees and speakers, can be overwhelming and prone to omissions.
 
 Blabber solves these issues by automating transcription, report generation, and providing tools like sentiment analysis and screenshot capture to ensure that no critical information is missed and that meetings are documented efficiently and accurately.
+
+---
+
+## Demo Video
+
+Check out the demo video to see Blabber in action: [Watch Demo Video](https://www.youtube.com/watch?v=S3DEO8QrMMM)
 
 ---
 
