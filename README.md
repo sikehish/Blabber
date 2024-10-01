@@ -205,6 +205,7 @@ This directory contains the Chrome extension that integrates Blabber with Google
 
 ![Homepage](https://i.imgur.com/oUBrtxz.jpeg)
 ![Features](https://i.imgur.com/tbkvwBS.jpeg)
+![Dashboard](https://github.com/user-attachments/assets/94362d82-d713-4ccf-87a5-d5b68f1f541a)
 ![Features](https://i.imgur.com/IthUbx6.jpeg)
 ![Features](https://i.imgur.com/SUL2nI7.jpeg)
 ![Google meet example](https://i.imgur.com/WNS2JpM.jpeg)
