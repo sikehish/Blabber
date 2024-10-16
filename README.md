@@ -1,4 +1,4 @@
-# Blabber - AI-Powered Meeting Management and Reporting
+# Blabber - AI-Powered Meeting Summaries & Reports
 
 > Built at ScrollHacks 2024
 
@@ -214,6 +214,9 @@ This directory contains the Chrome extension that integrates Blabber with Google
 ![Getting report on email - example](https://i.imgur.com/YWF9LQv.jpeg)
 
 ---
+
+## License
+This project's Google Chrome extension uses code from [Transcriptonic](https://github.com/vivek-nexus/transcriptonic) under the MIT License.
 
 ## Overview of the Team
 
